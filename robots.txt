@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nova-ai-gilt-eight.vercel.app/sitemap.xml
