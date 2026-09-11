@@ -18,3 +18,127 @@ $("cf").onsubmit=async e=>{e.preventDefault();let text=$("text").value.trim();if
 $("theme").onclick=()=>{document.body.classList.toggle("light");localStorage.setItem("nova_theme",document.body.classList.contains("light")?"light":"dark")};if(localStorage.getItem("nova_theme")==="light")document.body.classList.add("light");
 $("text").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("cf").requestSubmit()}};
 let s=localStorage.getItem("nova_session")||sessionStorage.getItem("nova_session"),all=users();if(s&&all[s])enter(all[s]);
+/* =========================
+   NOVA AI IMAGE GENERATOR
+========================= */
+
+const openImageGenerator = $("openImageGenerator");
+const closeImageGenerator = $("closeImageGenerator");
+const imageGenerator = $("imageGenerator");
+const generateImageBtn = $("generateImageBtn");
+const imagePrompt = $("imagePrompt");
+const imageStatus = $("imageStatus");
+const generatedImageBox = $("generatedImageBox");
+const generatedImage = $("generatedImage");
+const downloadGeneratedImage = $("downloadGeneratedImage");
+const imageCounter = $("imageCounter");
+
+let imagesRemaining = 100;
+
+openImageGenerator.onclick = () => {
+  imageGenerator.classList.remove("hide");
+  imagePrompt.focus();
+};
+
+closeImageGenerator.onclick = () => {
+  imageGenerator.classList.add("hide");
+};
+
+imageGenerator.onclick = (e) => {
+  if (e.target === imageGenerator) {
+    imageGenerator.classList.add("hide");
+  }
+};
+
+function updateImageCounter() {
+  imageCounter.textContent =
+    `${imagesRemaining} صورة متاحة اليوم`;
+}
+
+generateImageBtn.onclick = async () => {
+
+  const prompt = imagePrompt.value.trim();
+
+  if (!prompt) {
+    imageStatus.textContent =
+      "اكتب وصف الصورة أولاً.";
+    return;
+  }
+
+  if (!user || !user.email) {
+    imageStatus.textContent =
+      "يجب تسجيل الدخول أولاً.";
+    return;
+  }
+
+  if (imagesRemaining <= 0) {
+    imageStatus.textContent =
+      "وصلت للحد اليومي وهو 100 صورة. حاول غدًا.";
+    return;
+  }
+
+  generateImageBtn.disabled = true;
+
+  imageStatus.textContent =
+    "✦ NOVA AI يقوم بإنشاء الصورة...";
+
+  generatedImageBox.classList.add("hide");
+
+  try {
+
+    const response = await fetch(
+      "/api/generate-image",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt: prompt,
+          userEmail: user.email
+        })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "فشل إنشاء الصورة."
+      );
+    }
+
+    generatedImage.src = data.image;
+
+    downloadGeneratedImage.href =
+      data.image;
+
+    generatedImageBox.classList.remove("hide");
+
+    if (typeof data.remaining === "number") {
+      imagesRemaining = data.remaining;
+    } else {
+      imagesRemaining--;
+    }
+
+    updateImageCounter();
+
+    imageStatus.textContent =
+      "تم إنشاء الصورة بنجاح ✦";
+
+  } catch (error) {
+
+    imageStatus.textContent =
+      "تعذر إنشاء الصورة: " +
+      error.message;
+
+  } finally {
+
+    generateImageBtn.disabled = false;
+
+  }
+};
+
+updateImageCounter();
