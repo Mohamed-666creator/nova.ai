@@ -81,7 +81,10 @@
     <button id="new">
       ＋ محادثة جديدة
     </button>
-
+<button id="openImageGenerator" class="image-button">
+  ✦ Generate Image
+</button>
+    
     <div id="list"></div>
 
     <div class="bottom">
@@ -158,7 +161,55 @@
   </main>
 
 </div>
+<!-- ===== NOVA IMAGE GENERATOR ===== -->
 
+<section id="imageGenerator" class="image-generator hide">
+
+  <div class="image-generator-box">
+
+    <div class="image-generator-title">
+      <div>
+        <h2>✦ Generate Image</h2>
+        <p>اكتب وصف الصورة التي تريد إنشاءها</p>
+      </div>
+
+      <button id="closeImageGenerator">×</button>
+    </div>
+
+    <textarea
+      id="imagePrompt"
+      placeholder="مثال: مدينة مستقبلية ليلية، أضواء بنفسجية، أسلوب سينمائي..."
+      rows="4"
+    ></textarea>
+
+    <div class="image-generator-actions">
+
+      <button id="generateImageBtn">
+        ✦ إنشاء الصورة
+      </button>
+
+      <span id="imageCounter">
+        100 صورة متاحة اليوم
+      </span>
+
+    </div>
+
+    <div id="imageStatus"></div>
+
+    <div id="generatedImageBox" class="hide">
+      <img id="generatedImage" alt="Generated image">
+
+      <a
+        id="downloadGeneratedImage"
+        download="nova-ai-image.png"
+      >
+        تحميل الصورة
+      </a>
+    </div>
+
+  </div>
+
+</section>
 
 <script src="app.js"></script>
 
