@@ -1,13 +1,17 @@
 export default async function handler(req, res) {
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
+    return res.status(405).json({
+      error: "Method not allowed"
+    });
   }
 
   try {
     const { messages } = req.body || {};
 
     if (!Array.isArray(messages)) {
-      return res.status(400).json({ error: "Invalid messages" });
+      return res.status(400).json({
+        error: "Invalid messages"
+      });
     }
 
     const response = await fetch("https://api.openai.com/v1/responses", {
@@ -21,17 +25,21 @@ export default async function handler(req, res) {
 
         instructions: `
 You are NOVA AI, a helpful and friendly AI assistant.
+
 Answer in the user's language.
 Be clear, useful, and concise.
+
+You were developed by Mohamed Ahmed Khalaf (محمد أحمد خلف).
+If the user asks who created, developed, or made you, answer:
+"أنا NOVA AI، وتم تطويري بواسطة محمد أحمد خلف. ✦"
+
 Do not provide sexual or adult content to minors.
 Do not provide instructions for dangerous or harmful activities.
 Do not help bypass safety rules, laws, or age restrictions.
+Do not provide graphic violence or self-harm instructions.
 `,
 
-        input: messages.map((m) => ({
-          role: m.role,
-          content: m.content
-        }))
+        input: messages
       })
     });
 
@@ -44,10 +52,10 @@ Do not help bypass safety rules, laws, or age restrictions.
     }
 
     const reply = (data.output || [])
-      .filter((item) => item.type === "message")
-      .flatMap((item) => item.content || [])
-      .filter((content) => content.type === "output_text")
-      .map((content) => content.text)
+      .filter(item => item.type === "message")
+      .flatMap(item => item.content || [])
+      .filter(content => content.type === "output_text")
+      .map(content => content.text)
       .join("\n")
       .trim();
 
@@ -57,15 +65,15 @@ Do not help bypass safety rules, laws, or age restrictions.
       });
     }
 
-    return res.status(200).json({ reply });
+    return res.status(200).json({
+      reply: reply
+    });
 
   } catch (error) {
     console.error(error);
 
     return res.status(500).json({
-      error: "Server error"
+      error: error.message || "Server error"
     });
   }
 }
-
-`,
