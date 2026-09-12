@@ -965,5 +965,52 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
   }
+  /* ================= ATTACH MENU ================= */
 
+  const attachBtn = $("attachBtn");
+  const attachOptions = $("attachOptions");
+  const addImageBtn = $("addImageBtn");
+  const createImageBtn = $("createImageBtn");
+
+  attachBtn.addEventListener("click", function (event) {
+
+    event.stopPropagation();
+
+    attachOptions.classList.toggle("hide");
+
+  });
+
+
+  addImageBtn.addEventListener("click", function () {
+
+    attachOptions.classList.add("hide");
+
+    imageInput.click();
+
+  });
+
+
+  createImageBtn.addEventListener("click", function () {
+
+    attachOptions.classList.add("hide");
+
+    textInput.value =
+      "✨ إنشاء صورة: ";
+
+    textInput.focus();
+
+  });
+
+
+  document.addEventListener("click", function (event) {
+
+    if (
+      !event.target.closest(".attach-menu")
+    ) {
+
+      attachOptions.classList.add("hide");
+
+    }
+
+  });
 });
