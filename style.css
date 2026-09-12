@@ -921,3 +921,26 @@ aside span {
 .light .attach-options button:hover {
   background: #f0f0f4;
 }
+/* ================= AI IMAGE ================= */
+
+.image-message {
+  padding: 8px !important;
+  max-width: min(520px, 78%);
+}
+
+
+.image-message img {
+  display: block;
+
+  width: 100%;
+
+  max-width: 500px;
+
+  height: auto;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 8px 30px
+    rgba(0, 0, 0, .35);
+}
