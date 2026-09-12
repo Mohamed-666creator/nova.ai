@@ -1,16 +1,10 @@
-const $ = (id) => document.getElementById(id);
-
-
-/* ================= DATA ================= */
-
 let mode = "login";
 let user = null;
 let chats = [];
 let current = null;
 let pendingImage = null;
 
-
-/* ================= ELEMENTS ================= */
+const $ = id => document.getElementById(id);
 
 const auth = $("auth");
 const app = $("app");
@@ -18,47 +12,90 @@ const app = $("app");
 const loginTab = $("lt");
 const signupTab = $("st");
 
-const authForm = $("af");
+const form = $("af");
 
 const nameInput = $("name");
 const emailInput = $("email");
 const passInput = $("pass");
 
-const rememberInput = $("remember");
-
+const remember = $("remember");
 const authButton = $("as");
-const authError = $("ae");
+const errorBox = $("ae");
 
-const messagesBox = $("msgs");
+const messages = $("msgs");
+const text = $("text");
 
-const textInput = $("text");
-
-const chatForm = $("cf");
-
-const chatList = $("list");
-
+const newButton = $("new");
+const list = $("list");
 const userBox = $("user");
 
-const newChatButton = $("new");
-
 const themeButton = $("theme");
-
 const logoutButton = $("logout");
 
 const imageInput = $("img");
-
 const preview = $("prev");
 const previewImage = $("pi");
 const removeImage = $("rm");
 
 
-/* ================= STORAGE ================= */
+/* ================= AUTH MODE ================= */
+
+function showLogin() {
+
+  mode = "login";
+
+  loginTab.classList.add("active");
+  signupTab.classList.remove("active");
+
+  nameInput.classList.add("hide");
+
+  authButton.textContent = "دخول";
+
+  errorBox.textContent = "";
+
+}
+
+
+function showSignup() {
+
+  mode = "signup";
+
+  signupTab.classList.add("active");
+  loginTab.classList.remove("active");
+
+  nameInput.classList.remove("hide");
+
+  authButton.textContent = "إنشاء حساب";
+
+  errorBox.textContent = "";
+
+}
+
+
+/* ================= BUTTONS ================= */
+
+loginTab.type = "button";
+signupTab.type = "button";
+
+loginTab.onclick = showLogin;
+signupTab.onclick = showSignup;
+
+
+/* ================= USERS ================= */
 
 function getUsers() {
 
-  return JSON.parse(
-    localStorage.getItem("nova_users") || "[]"
-  );
+  try {
+
+    return JSON.parse(
+      localStorage.getItem("nova_users") || "[]"
+    );
+
+  } catch {
+
+    return [];
+
+  }
 
 }
 
@@ -73,84 +110,36 @@ function saveUsers(users) {
 }
 
 
-function userChatsKey() {
-
-  if (!user) return "nova_chats";
-
-  return "nova_chats_" + user.email;
-
-}
-
-
-function loadChats() {
-
-  chats = JSON.parse(
-    localStorage.getItem(userChatsKey()) || "[]"
-  );
-
-}
-
-
-function saveChats() {
-
-  localStorage.setItem(
-    userChatsKey(),
-    JSON.stringify(chats)
-  );
-
-}
-
-
-/* ================= AUTH TABS ================= */
-
-loginTab.onclick = () => {
-
-  mode = "login";
-
-  loginTab.classList.add("active");
-  signupTab.classList.remove("active");
-
-  nameInput.classList.add("hide");
-
-  authButton.textContent = "دخول";
-
-  authError.textContent = "";
-
-};
-
-
-signupTab.onclick = () => {
-
-  mode = "signup";
-
-  signupTab.classList.add("active");
-  loginTab.classList.remove("active");
-
-  nameInput.classList.remove("hide");
-
-  authButton.textContent = "إنشاء حساب";
-
-  authError.textContent = "";
-
-};
-
-
 /* ================= AUTH ================= */
 
-authForm.onsubmit = (e) => {
+form.onsubmit = function(event) {
 
-  e.preventDefault();
+  event.preventDefault();
 
-  const name = nameInput.value.trim();
+  errorBox.textContent = "";
 
-  const email = emailInput.value.trim().toLowerCase();
+  const name =
+    nameInput.value.trim();
 
-  const password = passInput.value;
+  const email =
+    emailInput.value.trim().toLowerCase();
 
-  if (!email || !password) {
+  const password =
+    passInput.value;
 
-    authError.textContent =
-      "من فضلك أكمل البيانات.";
+  if (!email) {
+
+    errorBox.textContent =
+      "اكتب البريد الإلكتروني.";
+
+    return;
+
+  }
+
+  if (!password) {
+
+    errorBox.textContent =
+      "اكتب كلمة المرور.";
 
     return;
 
@@ -160,14 +149,16 @@ authForm.onsubmit = (e) => {
   const users = getUsers();
 
 
-  /* ===== SIGNUP ===== */
+  /* ===== CREATE ACCOUNT ===== */
 
   if (mode === "signup") {
 
     if (!name) {
 
-      authError.textContent =
-        "اكتب اسمك أولًا.";
+      errorBox.textContent =
+        "اكتب الاسم.";
+
+      nameInput.focus();
 
       return;
 
@@ -176,7 +167,7 @@ authForm.onsubmit = (e) => {
 
     if (password.length < 4) {
 
-      authError.textContent =
+      errorBox.textContent =
         "كلمة المرور يجب أن تكون 4 أحرف على الأقل.";
 
       return;
@@ -184,14 +175,16 @@ authForm.onsubmit = (e) => {
     }
 
 
-    if (
+    const exists =
       users.some(
-        (u) => u.email === email
-      )
-    ) {
+        u => u.email === email
+      );
 
-      authError.textContent =
-        "هذا البريد مسجل بالفعل.";
+
+    if (exists) {
+
+      errorBox.textContent =
+        "هذا البريد مسجل بالفعل. جرّب تسجيل الدخول.";
 
       return;
 
@@ -199,9 +192,13 @@ authForm.onsubmit = (e) => {
 
 
     const newUser = {
-      name,
-      email,
-      password
+
+      name: name,
+
+      email: email,
+
+      password: password
+
     };
 
 
@@ -211,7 +208,8 @@ authForm.onsubmit = (e) => {
 
     user = newUser;
 
-    if (rememberInput.checked) {
+
+    if (remember.checked) {
 
       localStorage.setItem(
         "nova_current_user",
@@ -230,16 +228,17 @@ authForm.onsubmit = (e) => {
 
   /* ===== LOGIN ===== */
 
-  const found = users.find(
-    (u) =>
-      u.email === email &&
-      u.password === password
-  );
+  const found =
+    users.find(
+      u =>
+        u.email === email &&
+        u.password === password
+    );
 
 
   if (!found) {
 
-    authError.textContent =
+    errorBox.textContent =
       "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
 
     return;
@@ -250,7 +249,7 @@ authForm.onsubmit = (e) => {
   user = found;
 
 
-  if (rememberInput.checked) {
+  if (remember.checked) {
 
     localStorage.setItem(
       "nova_current_user",
@@ -271,7 +270,43 @@ authForm.onsubmit = (e) => {
 };
 
 
-/* ================= START APP ================= */
+/* ================= APP ================= */
+
+function chatKey() {
+
+  return user
+    ? "nova_chats_" + user.email
+    : "nova_chats";
+
+}
+
+
+function loadChats() {
+
+  try {
+
+    chats = JSON.parse(
+      localStorage.getItem(chatKey()) || "[]"
+    );
+
+  } catch {
+
+    chats = [];
+
+  }
+
+}
+
+
+function saveChats() {
+
+  localStorage.setItem(
+    chatKey(),
+    JSON.stringify(chats)
+  );
+
+}
+
 
 function startApp() {
 
@@ -280,14 +315,14 @@ function startApp() {
   app.classList.remove("hide");
 
   userBox.textContent =
-    user?.name || user?.email || "";
+    user.name || user.email;
 
   loadChats();
 
-  renderChatList();
+  renderList();
 
 
-  if (chats.length === 0) {
+  if (!chats.length) {
 
     createChat();
 
@@ -303,7 +338,7 @@ function startApp() {
 }
 
 
-/* ================= CREATE CHAT ================= */
+/* ================= CHAT ================= */
 
 function createChat() {
 
@@ -324,121 +359,97 @@ function createChat() {
 
   saveChats();
 
-  renderChatList();
+  renderList();
 
   renderMessages();
-
-  textInput.focus();
 
 }
 
 
-/* ================= NEW CHAT ================= */
-
-newChatButton.onclick = () => {
-
-  createChat();
-
-};
+newButton.onclick = createChat;
 
 
-/* ================= CHAT LIST ================= */
+function currentChat() {
 
-function renderChatList() {
+  return chats.find(
+    chat => chat.id === current
+  );
 
-  chatList.innerHTML = "";
+}
 
 
-  chats
-    .slice()
+/* ================= LIST ================= */
+
+function renderList() {
+
+  list.innerHTML = "";
+
+  [...chats]
     .reverse()
-    .forEach((chat) => {
+    .forEach(chat => {
 
-      const div =
+      const item =
         document.createElement("div");
 
-      div.className = "chat";
-
+      item.className = "chat";
 
       if (chat.id === current) {
 
-        div.classList.add("active");
+        item.classList.add("active");
 
       }
 
-
-      div.textContent =
+      item.textContent =
         chat.title || "محادثة جديدة";
 
-
-      div.onclick = () => {
+      item.onclick = () => {
 
         current = chat.id;
 
-        renderChatList();
+        renderList();
 
         renderMessages();
 
       };
 
-
-      chatList.appendChild(div);
+      list.appendChild(item);
 
     });
 
 }
 
 
-/* ================= CURRENT CHAT ================= */
-
-function getCurrentChat() {
-
-  return chats.find(
-    (chat) => chat.id === current
-  );
-
-}
-
-
-/* ================= RENDER MESSAGES ================= */
+/* ================= MESSAGES ================= */
 
 function renderMessages() {
 
-  messagesBox.innerHTML = "";
+  messages.innerHTML = "";
 
-  const chat = getCurrentChat();
+  const chat = currentChat();
 
   if (!chat) return;
 
 
-  chat.messages.forEach(
-    (message) => {
+  chat.messages.forEach(message => {
 
-      addMessageToScreen(
-        message.role,
-        message.content
-      );
+    addMessage(
+      message.role,
+      message.content
+    );
 
-    }
-  );
+  });
 
 
-  messagesBox.scrollTop =
-    messagesBox.scrollHeight;
+  messages.scrollTop =
+    messages.scrollHeight;
 
 }
 
 
-/* ================= ADD MESSAGE ================= */
-
-function addMessageToScreen(
-  role,
-  content
-) {
+function addMessage(role, content) {
 
   const div =
     document.createElement("div");
-
 
   div.className =
     "msg " +
@@ -446,48 +457,37 @@ function addMessageToScreen(
       ? "user"
       : "ai");
 
-
   div.textContent = content;
 
-
-  messagesBox.appendChild(div);
+  messages.appendChild(div);
 
 }
 
 
-/* ================= SEND MESSAGE ================= */
+/* ================= SEND ================= */
 
-chatForm.onsubmit = async (e) => {
+document.getElementById("cf").onsubmit =
+async function(event) {
 
-  e.preventDefault();
+  event.preventDefault();
 
+  const message =
+    text.value.trim();
 
-  const text =
-    textInput.value.trim();
+  if (!message && !pendingImage) return;
 
-
-  if (!text && !pendingImage) {
-
-    return;
-
-  }
-
-
-  const chat =
-    getCurrentChat();
-
+  const chat = currentChat();
 
   if (!chat) return;
 
 
-  let userMessage = text;
-
+  let content = message;
 
   if (pendingImage) {
 
-    userMessage =
-      text
-        ? text + "\n\n[تم إرفاق صورة]"
+    content =
+      message
+        ? message + "\n\n[تم إرفاق صورة]"
         : "[تم إرفاق صورة]";
 
   }
@@ -497,38 +497,30 @@ chatForm.onsubmit = async (e) => {
 
     role: "user",
 
-    content: userMessage
+    content: content
 
   });
 
 
-  if (
-    chat.title === "محادثة جديدة"
-  ) {
+  if (chat.title === "محادثة جديدة") {
 
     chat.title =
-      text.slice(0, 35) ||
+      message.slice(0, 35) ||
       "محادثة جديدة";
 
   }
 
 
-  addMessageToScreen(
-    "user",
-    userMessage
-  );
+  addMessage("user", content);
 
-
-  textInput.value = "";
+  text.value = "";
 
   removePendingImage();
 
   saveChats();
 
-  renderChatList();
+  renderList();
 
-
-  /* ===== LOADING ===== */
 
   const loading =
     document.createElement("div");
@@ -539,10 +531,10 @@ chatForm.onsubmit = async (e) => {
   loading.textContent =
     "NOVA AI يكتب...";
 
-  messagesBox.appendChild(loading);
+  messages.appendChild(loading);
 
-  messagesBox.scrollTop =
-    messagesBox.scrollHeight;
+  messages.scrollTop =
+    messages.scrollHeight;
 
 
   try {
@@ -562,15 +554,13 @@ chatForm.onsubmit = async (e) => {
         body: JSON.stringify({
 
           messages:
-            chat.messages.map(
-              (m) => ({
+            chat.messages.map(m => ({
 
-                role: m.role,
+              role: m.role,
 
-                content: m.content
+              content: m.content
 
-              })
-            )
+            }))
 
         })
 
@@ -579,7 +569,6 @@ chatForm.onsubmit = async (e) => {
 
     const data =
       await response.json();
-
 
     loading.remove();
 
@@ -608,32 +597,25 @@ chatForm.onsubmit = async (e) => {
     });
 
 
-    addMessageToScreen(
+    addMessage(
       "assistant",
       reply
     );
 
-
     saveChats();
 
-
-    messagesBox.scrollTop =
-      messagesBox.scrollHeight;
+    messages.scrollTop =
+      messages.scrollHeight;
 
 
   } catch (error) {
 
     loading.remove();
 
-
-    const errorMessage =
-      "تعذر الاتصال بـ NOVA AI: " +
-      error.message;
-
-
-    addMessageToScreen(
+    addMessage(
       "assistant",
-      errorMessage
+      "تعذر الاتصال بـ NOVA AI: " +
+      error.message
     );
 
   }
@@ -643,43 +625,34 @@ chatForm.onsubmit = async (e) => {
 
 /* ================= IMAGE ================= */
 
-imageInput.onchange = () => {
+imageInput.onchange = function() {
 
   const file =
-    imageInput.files?.[0];
+    imageInput.files[0];
 
   if (!file) return;
 
-
   pendingImage = file;
-
 
   const reader =
     new FileReader();
 
-
-  reader.onload = () => {
+  reader.onload = function() {
 
     previewImage.src =
       reader.result;
 
-    preview.classList.remove(
-      "hide"
-    );
+    preview.classList.remove("hide");
 
   };
-
 
   reader.readAsDataURL(file);
 
 };
 
 
-removeImage.onclick = () => {
-
-  removePendingImage();
-
-};
+removeImage.onclick =
+removePendingImage;
 
 
 function removePendingImage() {
@@ -690,50 +663,20 @@ function removePendingImage() {
 
   previewImage.src = "";
 
-  preview.classList.add(
-    "hide"
-  );
+  preview.classList.add("hide");
 
 }
 
 
-/* ================= TEXTAREA ================= */
-
-textInput.addEventListener(
-  "input",
-  () => {
-
-    textInput.style.height =
-      "auto";
-
-    textInput.style.height =
-      Math.min(
-        textInput.scrollHeight,
-        140
-      ) + "px";
-
-  }
-);
-
-
 /* ================= THEME ================= */
 
-themeButton.onclick = () => {
+themeButton.onclick = function() {
 
-  document.body.classList.toggle(
-    "light"
-  );
-
-
-  const light =
-    document.body.classList.contains(
-      "light"
-    );
-
+  document.body.classList.toggle("light");
 
   localStorage.setItem(
     "nova_theme",
-    light
+    document.body.classList.contains("light")
       ? "light"
       : "dark"
   );
@@ -742,21 +685,17 @@ themeButton.onclick = () => {
 
 
 if (
-  localStorage.getItem(
-    "nova_theme"
-  ) === "light"
+  localStorage.getItem("nova_theme") === "light"
 ) {
 
-  document.body.classList.add(
-    "light"
-  );
+  document.body.classList.add("light");
 
 }
 
 
 /* ================= LOGOUT ================= */
 
-logoutButton.onclick = () => {
+logoutButton.onclick = function() {
 
   localStorage.removeItem(
     "nova_current_user"
@@ -777,20 +716,14 @@ const savedEmail =
 
 if (savedEmail) {
 
-  const users =
-    getUsers();
-
-
-  const savedUser =
-    users.find(
-      (u) =>
-        u.email === savedEmail
+  const found =
+    getUsers().find(
+      u => u.email === savedEmail
     );
 
+  if (found) {
 
-  if (savedUser) {
-
-    user = savedUser;
+    user = found;
 
     startApp();
 
