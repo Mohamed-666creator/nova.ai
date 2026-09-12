@@ -1,6 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
-  const $ = id => document.getElementById(id);
+  /* ================= ELEMENTS ================= */
+
+  const $ = (id) => document.getElementById(id);
 
   const auth = $("auth");
   const app = $("app");
@@ -8,20 +10,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginTab = $("lt");
   const signupTab = $("st");
 
-  const form = $("af");
+  const authForm = $("af");
+
   const nameInput = $("name");
   const emailInput = $("email");
-  const passInput = $("pass");
-  const remember = $("remember");
+  const passwordInput = $("pass");
+
+  const rememberInput = $("remember");
 
   const authButton = $("as");
   const errorBox = $("ae");
 
-  const messages = $("msgs");
-  const text = $("text");
+  const chatForm = $("cf");
+  const textInput = $("text");
 
-  const newButton = $("new");
-  const list = $("list");
+  const messagesBox = $("msgs");
+
+  const newChatButton = $("new");
+  const chatList = $("list");
+
   const userBox = $("user");
 
   const themeButton = $("theme");
@@ -30,18 +37,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const imageInput = $("img");
   const preview = $("prev");
   const previewImage = $("pi");
-  const removeImage = $("rm");
+  const removeImageButton = $("rm");
+
+
+  /* ================= VARIABLES ================= */
 
   let mode = "login";
+
   let user = null;
+
   let chats = [];
-  let current = null;
+
+  let currentChatId = null;
+
   let pendingImage = null;
 
 
-  /* ================= AUTH MODE ================= */
+  /* ================= AUTH TABS ================= */
 
-  function showLogin() {
+  loginTab.type = "button";
+  signupTab.type = "button";
+  authButton.type = "submit";
+
+
+  loginTab.addEventListener("click", function () {
 
     mode = "login";
 
@@ -54,10 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     errorBox.textContent = "";
 
-  }
+  });
 
 
-  function showSignup() {
+  signupTab.addEventListener("click", function () {
 
     mode = "signup";
 
@@ -70,17 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     errorBox.textContent = "";
 
-  }
+  });
 
 
-  loginTab.type = "button";
-  signupTab.type = "button";
-
-  loginTab.addEventListener("click", showLogin);
-  signupTab.addEventListener("click", showSignup);
-
-
-  /* ================= STORAGE ================= */
+  /* ================= USERS ================= */
 
   function getUsers() {
 
@@ -90,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.getItem("nova_users") || "[]"
       );
 
-    } catch (e) {
+    } catch (error) {
 
       return [];
 
@@ -109,11 +121,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* ================= REGISTER ================= */
+  /* ================= AUTH FORM ================= */
 
-  function register() {
+  authForm.addEventListener("submit", function (event) {
+
+    event.preventDefault();
 
     errorBox.textContent = "";
+
 
     const name =
       nameInput.value.trim();
@@ -122,138 +137,135 @@ document.addEventListener("DOMContentLoaded", () => {
       emailInput.value.trim().toLowerCase();
 
     const password =
-      passInput.value;
+      passwordInput.value;
 
 
-    if (!name) {
+    /* ===== CREATE ACCOUNT ===== */
 
-      errorBox.textContent =
-        "اكتب الاسم أولًا.";
+    if (mode === "signup") {
 
-      nameInput.focus();
+      if (!name) {
+
+        errorBox.textContent =
+          "من فضلك اكتب الاسم.";
+
+        nameInput.focus();
+
+        return;
+
+      }
+
+
+      if (!email) {
+
+        errorBox.textContent =
+          "من فضلك اكتب البريد الإلكتروني.";
+
+        emailInput.focus();
+
+        return;
+
+      }
+
+
+      if (!email.includes("@")) {
+
+        errorBox.textContent =
+          "اكتب بريدًا إلكترونيًا صحيحًا.";
+
+        emailInput.focus();
+
+        return;
+
+      }
+
+
+      if (!password) {
+
+        errorBox.textContent =
+          "من فضلك اكتب كلمة المرور.";
+
+        passwordInput.focus();
+
+        return;
+
+      }
+
+
+      if (password.length < 4) {
+
+        errorBox.textContent =
+          "كلمة المرور يجب أن تكون 4 أحرف على الأقل.";
+
+        passwordInput.focus();
+
+        return;
+
+      }
+
+
+      const users = getUsers();
+
+
+      const alreadyExists =
+        users.some(
+          function (item) {
+            return item.email === email;
+          }
+        );
+
+
+      if (alreadyExists) {
+
+        errorBox.textContent =
+          "هذا البريد مسجل بالفعل. استخدم تسجيل الدخول.";
+
+        return;
+
+      }
+
+
+      const newUser = {
+
+        name: name,
+
+        email: email,
+
+        password: password
+
+      };
+
+
+      users.push(newUser);
+
+      saveUsers(users);
+
+      user = newUser;
+
+
+      if (rememberInput.checked) {
+
+        localStorage.setItem(
+          "nova_current_user",
+          email
+        );
+
+      }
+
+
+      startApp();
 
       return;
 
     }
 
 
-    if (!email) {
-
-      errorBox.textContent =
-        "اكتب البريد الإلكتروني.";
-
-      emailInput.focus();
-
-      return;
-
-    }
-
-
-    if (!email.includes("@")) {
-
-      errorBox.textContent =
-        "اكتب بريدًا إلكترونيًا صحيحًا.";
-
-      emailInput.focus();
-
-      return;
-
-    }
-
-
-    if (!password) {
-
-      errorBox.textContent =
-        "اكتب كلمة المرور.";
-
-      passInput.focus();
-
-      return;
-
-    }
-
-
-    if (password.length < 4) {
-
-      errorBox.textContent =
-        "كلمة المرور يجب أن تكون 4 أحرف على الأقل.";
-
-      passInput.focus();
-
-      return;
-
-    }
-
-
-    const users = getUsers();
-
-
-    const exists =
-      users.some(
-        u => u.email === email
-      );
-
-
-    if (exists) {
-
-      errorBox.textContent =
-        "هذا البريد مسجل بالفعل. استخدم تسجيل الدخول.";
-
-      return;
-
-    }
-
-
-    const newUser = {
-
-      name: name,
-
-      email: email,
-
-      password: password
-
-    };
-
-
-    users.push(newUser);
-
-    saveUsers(users);
-
-    user = newUser;
-
-
-    if (remember.checked) {
-
-      localStorage.setItem(
-        "nova_current_user",
-        email
-      );
-
-    }
-
-
-    startApp();
-
-  }
-
-
-  /* ================= LOGIN ================= */
-
-  function login() {
-
-    errorBox.textContent = "";
-
-    const email =
-      emailInput.value.trim().toLowerCase();
-
-    const password =
-      passInput.value;
-
+    /* ===== LOGIN ===== */
 
     if (!email || !password) {
 
       errorBox.textContent =
-        "اكتب البريد وكلمة المرور.";
+        "اكتب البريد الإلكتروني وكلمة المرور.";
 
       return;
 
@@ -263,15 +275,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const users = getUsers();
 
 
-    const found =
+    const foundUser =
       users.find(
-        u =>
-          u.email === email &&
-          u.password === password
+        function (item) {
+
+          return (
+            item.email === email &&
+            item.password === password
+          );
+
+        }
       );
 
 
-    if (!found) {
+    if (!foundUser) {
 
       errorBox.textContent =
         "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
@@ -281,10 +298,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    user = found;
+    user = foundUser;
 
 
-    if (remember.checked) {
+    if (rememberInput.checked) {
 
       localStorage.setItem(
         "nova_current_user",
@@ -302,61 +319,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     startApp();
 
-  }
-
-
-  /* ================= DIRECT BUTTON ================= */
-
-  authButton.type = "button";
-
-
-  authButton.addEventListener(
-    "click",
-    () => {
-
-      if (mode === "signup") {
-
-        register();
-
-      } else {
-
-        login();
-
-      }
-
-    }
-  );
-
-
-  /* ================= FORM ================= */
-
-  form.addEventListener(
-    "submit",
-    event => {
-
-      event.preventDefault();
-
-      if (mode === "signup") {
-
-        register();
-
-      } else {
-
-        login();
-
-      }
-
-    }
-  );
+  });
 
 
   /* ================= CHAT STORAGE ================= */
 
-  function chatKey() {
+  function getChatStorageKey() {
 
-    return user
-      ? "nova_chats_" + user.email
-      : "nova_chats";
+    if (!user) {
+
+      return "nova_chats";
+
+    }
+
+    return "nova_chats_" + user.email;
 
   }
 
@@ -366,10 +342,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
 
       chats = JSON.parse(
-        localStorage.getItem(chatKey()) || "[]"
+        localStorage.getItem(
+          getChatStorageKey()
+        ) || "[]"
       );
 
-    } catch {
+    } catch (error) {
 
       chats = [];
 
@@ -381,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveChats() {
 
     localStorage.setItem(
-      chatKey(),
+      getChatStorageKey(),
       JSON.stringify(chats)
     );
 
@@ -396,21 +374,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     app.classList.remove("hide");
 
+
     userBox.textContent =
       user.name || user.email;
 
+
     loadChats();
 
-    renderList();
+    renderChatList();
 
 
-    if (!chats.length) {
+    if (chats.length === 0) {
 
       createChat();
 
     } else {
 
-      current =
+      currentChatId =
         chats[chats.length - 1].id;
 
       renderMessages();
@@ -420,11 +400,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* ================= CHAT ================= */
+  /* ================= CREATE CHAT ================= */
 
   function createChat() {
 
-    const chat = {
+    const newChat = {
 
       id: Date.now(),
 
@@ -435,29 +415,37 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
 
-    chats.push(chat);
+    chats.push(newChat);
 
-    current = chat.id;
+    currentChatId =
+      newChat.id;
+
 
     saveChats();
 
-    renderList();
+    renderChatList();
 
     renderMessages();
 
   }
 
 
-  newButton.addEventListener(
+  newChatButton.addEventListener(
     "click",
     createChat
   );
 
 
-  function currentChat() {
+  /* ================= CURRENT CHAT ================= */
+
+  function getCurrentChat() {
 
     return chats.find(
-      chat => chat.id === current
+      function (chat) {
+
+        return chat.id === currentChatId;
+
+      }
     );
 
   }
@@ -465,44 +453,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= CHAT LIST ================= */
 
-  function renderList() {
+  function renderChatList() {
 
-    list.innerHTML = "";
+    chatList.innerHTML = "";
 
-    [...chats]
-      .reverse()
-      .forEach(chat => {
+
+    const reversedChats =
+      chats.slice().reverse();
+
+
+    reversedChats.forEach(
+      function (chat) {
 
         const item =
           document.createElement("div");
 
+
         item.className = "chat";
 
-        if (chat.id === current) {
+
+        if (chat.id === currentChatId) {
 
           item.classList.add("active");
 
         }
 
+
         item.textContent =
           chat.title || "محادثة جديدة";
 
+
         item.addEventListener(
           "click",
-          () => {
+          function () {
 
-            current = chat.id;
+            currentChatId =
+              chat.id;
 
-            renderList();
+            renderChatList();
 
             renderMessages();
 
           }
         );
 
-        list.appendChild(item);
 
-      });
+        chatList.appendChild(item);
+
+      }
+    );
 
   }
 
@@ -511,17 +510,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderMessages() {
 
-    messages.innerHTML = "";
+    messagesBox.innerHTML = "";
 
-    const chat = currentChat();
 
-    if (!chat) return;
+    const chat =
+      getCurrentChat();
+
+
+    if (!chat) {
+
+      return;
+
+    }
 
 
     chat.messages.forEach(
-      message => {
+      function (message) {
 
-        addMessage(
+        addMessageToScreen(
           message.role,
           message.content
         );
@@ -530,85 +536,101 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
 
-    messages.scrollTop =
-      messages.scrollHeight;
+    messagesBox.scrollTop =
+      messagesBox.scrollHeight;
 
   }
 
 
-  function addMessage(role, content) {
+  function addMessageToScreen(
+    role,
+    content
+  ) {
 
-    const div =
+    const message =
       document.createElement("div");
 
-    div.className =
+
+    message.className =
       "msg " +
-      (role === "user"
-        ? "user"
-        : "ai");
+      (
+        role === "user"
+          ? "user"
+          : "ai"
+      );
 
-    div.textContent = content;
 
-    messages.appendChild(div);
+    message.textContent =
+      content;
+
+
+    messagesBox.appendChild(
+      message
+    );
 
   }
 
 
-  /* ================= SEND TO GEMINI ================= */
-
-  formChat.addEventListener(
-    "submit",
-    async event => {
-
-      event.preventDefault();
-
-    }
-  );
-
-
-  /* ================= CHAT FORM ================= */
-
-  const chatForm =
-    $("cf");
-
+  /* ================= SEND MESSAGE ================= */
 
   chatForm.addEventListener(
     "submit",
-    async event => {
+    async function (event) {
 
       event.preventDefault();
 
-      const message =
-        text.value.trim();
 
-      if (!message && !pendingImage) {
+      const text =
+        textInput.value.trim();
+
+
+      if (!text && !pendingImage) {
+
         return;
+
       }
 
 
-      const chat = currentChat();
+      const chat =
+        getCurrentChat();
 
-      if (!chat) return;
+
+      if (!chat) {
+
+        return;
+
+      }
 
 
-      let content = message;
+      let userMessage =
+        text;
 
 
       if (pendingImage) {
 
-        content =
-          message
-            ? message + "\n\n[تم إرفاق صورة]"
-            : "[تم إرفاق صورة]";
+        if (text) {
+
+          userMessage =
+            text +
+            "\n\n[تم إرفاق صورة]";
+
+        } else {
+
+          userMessage =
+            "[تم إرفاق صورة]";
+
+        }
 
       }
 
+
+      /* ===== USER MESSAGE ===== */
 
       chat.messages.push({
 
         role: "user",
 
-        content: content
+        content: userMessage
 
       });
 
@@ -618,42 +640,55 @@ document.addEventListener("DOMContentLoaded", () => {
       ) {
 
         chat.title =
-          message.slice(0, 35) ||
+          text.slice(0, 35) ||
           "محادثة جديدة";
 
       }
 
 
-      addMessage(
+      addMessageToScreen(
         "user",
-        content
+        userMessage
       );
 
 
-      text.value = "";
+      textInput.value = "";
+
+      textInput.style.height = "auto";
+
 
       removePendingImage();
 
+
       saveChats();
 
-      renderList();
+      renderChatList();
 
+
+      /* ===== LOADING ===== */
 
       const loading =
         document.createElement("div");
 
+
       loading.className =
         "msg ai loading";
+
 
       loading.textContent =
         "NOVA AI يكتب...";
 
-      messages.appendChild(loading);
+
+      messagesBox.appendChild(
+        loading
+      );
 
 
-      messages.scrollTop =
-        messages.scrollHeight;
+      messagesBox.scrollTop =
+        messagesBox.scrollHeight;
 
+
+      /* ===== SEND TO SERVER ===== */
 
       try {
 
@@ -665,14 +700,32 @@ document.addEventListener("DOMContentLoaded", () => {
               method: "POST",
 
               headers: {
+
                 "Content-Type":
                   "application/json"
+
               },
 
               body:
                 JSON.stringify({
+
                   messages:
-                    chat.messages
+                    chat.messages.map(
+                      function (message) {
+
+                        return {
+
+                          role:
+                            message.role,
+
+                          content:
+                            message.content
+
+                        };
+
+                      }
+                    )
+
                 })
 
             }
@@ -701,6 +754,8 @@ document.addEventListener("DOMContentLoaded", () => {
           "لم يصل نص في الرد.";
 
 
+        /* ===== AI MESSAGE ===== */
+
         chat.messages.push({
 
           role: "assistant",
@@ -710,7 +765,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
-        addMessage(
+        addMessageToScreen(
           "assistant",
           reply
         );
@@ -719,8 +774,8 @@ document.addEventListener("DOMContentLoaded", () => {
         saveChats();
 
 
-        messages.scrollTop =
-          messages.scrollHeight;
+        messagesBox.scrollTop =
+          messagesBox.scrollHeight;
 
 
       } catch (error) {
@@ -728,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loading.remove();
 
 
-        addMessage(
+        addMessageToScreen(
           "assistant",
           "تعذر الاتصال بـ NOVA AI: " +
           error.message
@@ -740,16 +795,21 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
 
-  /* ================= IMAGE ================= */
+  /* ================= IMAGE PREVIEW ================= */
 
   imageInput.addEventListener(
     "change",
-    () => {
+    function () {
 
       const file =
         imageInput.files[0];
 
-      if (!file) return;
+
+      if (!file) {
+
+        return;
+
+      }
 
 
       pendingImage = file;
@@ -759,16 +819,17 @@ document.addEventListener("DOMContentLoaded", () => {
         new FileReader();
 
 
-      reader.onload = () => {
+      reader.onload =
+        function () {
 
-        previewImage.src =
-          reader.result;
+          previewImage.src =
+            reader.result;
 
-        preview.classList.remove(
-          "hide"
-        );
+          preview.classList.remove(
+            "hide"
+          );
 
-      };
+        };
 
 
       reader.readAsDataURL(file);
@@ -785,14 +846,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     previewImage.src = "";
 
-    preview.classList.add("hide");
+    preview.classList.add(
+      "hide"
+    );
 
   }
 
 
-  removeImage.addEventListener(
+  removeImageButton.addEventListener(
     "click",
     removePendingImage
+  );
+
+
+  /* ================= TEXTAREA ================= */
+
+  textInput.addEventListener(
+    "input",
+    function () {
+
+      textInput.style.height =
+        "auto";
+
+
+      textInput.style.height =
+        Math.min(
+          textInput.scrollHeight,
+          140
+        ) + "px";
+
+    }
   );
 
 
@@ -800,18 +883,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   themeButton.addEventListener(
     "click",
-    () => {
+    function () {
 
       document.body.classList.toggle(
         "light"
       );
 
 
-      localStorage.setItem(
-        "nova_theme",
+      const isLight =
         document.body.classList.contains(
           "light"
-        )
+        );
+
+
+      localStorage.setItem(
+        "nova_theme",
+        isLight
           ? "light"
           : "dark"
       );
@@ -837,7 +924,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   logoutButton.addEventListener(
     "click",
-    () => {
+    function () {
 
       localStorage.removeItem(
         "nova_current_user"
@@ -859,16 +946,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (savedEmail) {
 
-    const found =
+    const savedUser =
       getUsers().find(
-        u =>
-          u.email === savedEmail
+        function (item) {
+
+          return item.email === savedEmail;
+
+        }
       );
 
 
-    if (found) {
+    if (savedUser) {
 
-      user = found;
+      user = savedUser;
 
       startApp();
 
