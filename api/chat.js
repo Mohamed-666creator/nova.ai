@@ -1,201 +1,161 @@
 export default async function handler(req, res) {
-
   if (req.method !== "POST") {
-
     return res.status(405).json({
       error: "Method not allowed"
     });
-
   }
 
-
   try {
-
-    const { messages } =
-      req.body || {};
-
+    const { messages } = req.body || {};
 
     if (!Array.isArray(messages)) {
-
       return res.status(400).json({
         error: "Invalid messages"
       });
-
     }
 
-
-    const apiKey =
-      process.env.GEMINI_API_KEY;
-
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
-
       return res.status(500).json({
-        error:
-          "GEMINI_API_KEY غير موجود في Vercel"
+        error: "GEMINI_API_KEY غير موجود في Vercel"
       });
-
     }
 
+    /*
+      تحويل رسائل NOVA إلى صيغة يفهمها
+      Gemini Interactions API
+    */
+
+    const input = messages.map((message) => ({
+      type:
+        message.role === "assistant"
+          ? "model_output"
+          : "user_input",
+
+      content: [
+        {
+          type: "text",
+          text: String(message.content || "")
+        }
+      ]
+    }));
 
     const response = await fetch(
-
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
-
+      "https://generativelanguage.googleapis.com/v1beta/interactions",
       {
-
         method: "POST",
 
         headers: {
-
-          "Content-Type":
-            "application/json",
-
-          "x-goog-api-key":
-            apiKey
-
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
         },
 
         body: JSON.stringify({
+          model: "gemini-3.6-flash",
 
-          system_instruction: {
+          system_instruction: `
+أنت NOVA AI، مساعد ذكاء اصطناعي عربي حقيقي ومفيد.
 
-            parts: [
+تم تطويرك بواسطة محمد أحمد خلف.
 
-              {
+أجب بلغة المستخدم.
 
-                text: `
-أنت NOVA AI، مساعد ذكاء اصطناعي حقيقي وودود.
+كن واضحًا ومفيدًا ومختصرًا عند الحاجة.
 
-أجب باللغة التي يستخدمها المستخدم.
-
-كن واضحًا ومفيدًا ومختصرًا.
-
-ساعد المستخدم في:
-البرمجة، الرياضيات، العلوم، الدراسة،
-الأسئلة العامة، الكتابة، والإبداع.
-
-تم تطوير NOVA AI بواسطة محمد أحمد خلف.
-
-إذا سأل المستخدم من صنعك أو من طورك أو من أنشأك، أجب:
-
+إذا سألك المستخدم من طورك أو صنعك، قل:
 "أنا NOVA AI، وتم تطويري بواسطة محمد أحمد خلف. ✦"
 
-لا تقدم محتوى جنسيًا أو إباحيًا أو غير مناسب للقاصرين.
+لا تقدم محتوى جنسيًا أو إباحيًا للقاصرين.
 
 لا تقدم تعليمات خطيرة أو مؤذية.
 
-لا تساعد على إيذاء النفس أو الآخرين.
+لا تساعد على تجاوز قوانين أو أنظمة أمان أو قيود عمرية.
 
-لا تساعد على تجاوز القوانين أو أنظمة الأمان أو قيود العمر.
+لا تقدم وصفًا تفصيليًا للعنف الشديد أو إيذاء النفس.
 
-إذا كان الطلب غير آمن، ارفضه باختصار واقترح بديلًا آمنًا.
-`
+في الأسئلة التعليمية والبرمجية والعلمية والرياضية، ساعد المستخدم بشكل طبيعي.
+`,
 
-              }
+          input: input,
 
-            ]
-
+          generation_config: {
+            thinking_level: "low"
           },
 
-
-          contents:
-
-            messages.map(
-              (message) => ({
-
-                role:
-                  message.role === "assistant"
-                    ? "model"
-                    : "user",
-
-                parts: [
-
-                  {
-
-                    text:
-                      String(
-                        message.content || ""
-                      )
-
-                  }
-
-                ]
-
-              })
-            )
-
+          store: false
         })
-
       }
-
     );
 
-
-    const data =
-      await response.json();
-
+    const data = await response.json();
 
     if (!response.ok) {
-
-      return res.status(
-        response.status
-      ).json({
-
+      return res.status(response.status).json({
         error:
           data.error?.message ||
-          "Gemini request failed"
-
+          "Gemini API request failed"
       });
-
     }
 
+    /*
+      استخراج آخر رد نصي من Gemini
+    */
 
-    const reply =
+    let reply = "";
 
-      data
-        .candidates?.[0]
-        ?.content
-        ?.parts
-        ?.map(
-          (part) =>
-            part.text || ""
-        )
-        .join("")
-        .trim();
+    if (Array.isArray(data.steps)) {
 
+      for (let i = data.steps.length - 1; i >= 0; i--) {
+
+        const step = data.steps[i];
+
+        if (
+          step.type === "model_output" &&
+          Array.isArray(step.content)
+        ) {
+
+          for (const content of step.content) {
+
+            if (
+              content.type === "text" &&
+              content.text
+            ) {
+
+              reply += content.text;
+
+            }
+
+          }
+
+          if (reply.trim()) {
+            break;
+          }
+        }
+      }
+    }
+
+    reply = reply.trim();
 
     if (!reply) {
-
       return res.status(500).json({
-
-        error:
-          "Gemini returned no text."
-
+        error: "Gemini returned no text."
       });
-
     }
 
-
     return res.status(200).json({
-
-      reply: reply
-
+      reply
     });
-
 
   } catch (error) {
 
     console.error(error);
 
-
     return res.status(500).json({
-
       error:
+        error.message ||
         "Server error"
-
     });
 
   }
-
 }
