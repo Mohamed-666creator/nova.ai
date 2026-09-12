@@ -1,93 +1,726 @@
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Segoe UI,sans-serif;background:#0b0b10;color:#f5f5f7}.hide{display:none!important}button,input,textarea{font:inherit}.auth{min-height:100vh;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at top,#28144d,#0b0b10 60%)}.card{width:min(430px,100%);padding:30px;background:#15151d;border:1px solid #30303d;border-radius:24px}.card h1{margin:0}.card h1 span,aside span{color:#a66cff}.card p,small,header small,footer{color:#999}.tabs{display:flex;gap:8px;margin:20px 0}.tabs button{flex:1;padding:11px;border:1px solid #333;background:#20202a;color:#ddd;border-radius:10px}.tabs .active{background:#8a4dff;color:#fff}.card input:not([type=checkbox]){width:100%;padding:13px;margin:6px 0;background:#0e0e14;color:#fff;border:1px solid #333;border-radius:11px}.card label{display:block;margin:10px 0;color:#bbb}.primary{width:100%;padding:13px;background:#8a4dff;color:#fff;border:0;border-radius:11px}.err{color:#ff7777;min-height:22px;margin-top:8px}.app{height:100vh;display:flex}.app aside{width:270px;background:#101017;border-left:1px solid #292936;padding:18px;display:flex;flex-direction:column}.app aside>b{font-size:23px}.app aside>button{margin:20px 0 10px;padding:12px;background:#8a4dff;color:white;border:0;border-radius:11px}.bottom{margin-top:auto;display:flex;flex-direction:column;gap:8px}.bottom button{padding:11px;background:#20202a;color:#ddd;border:1px solid #333;border-radius:10px}.chat{padding:11px;border-radius:10px;color:#ccc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}.chat.active,.chat:hover{background:#20202a}.app main{flex:1;display:flex;flex-direction:column;min-width:0}.app header{height:68px;padding:0 22px;border-bottom:1px solid #292936;display:flex;align-items:center;justify-content:space-between}.app header small{display:block;font-size:11px;color:#4ddd89;margin-top:4px}.msgs,#msgs{flex:1;overflow:auto;padding:28px max(16px,calc((100% - 850px)/2));display:flex;flex-direction:column;gap:15px}.msg{max-width:78%;padding:13px 16px;border-radius:16px;line-height:1.7;white-space:pre-wrap;word-break:break-word}.msg.user{align-self:flex-start;background:#7540d7}.msg.ai{align-self:flex-end;background:#181820;border:1px solid #2b2b36}.msg img{max-width:300px;max-height:300px;display:block;border-radius:12px;margin-bottom:8px}.app form{width:min(850px,calc(100% - 28px));margin:0 auto 7px;display:flex;gap:8px;align-items:end;padding:8px;background:#15151d;border:1px solid #333;border-radius:17px}.attach,.send{width:42px;height:42px;display:grid;place-items:center;border-radius:11px;cursor:pointer}.attach{background:#252530}.send{border:0;background:#8a4dff;color:#fff}.app textarea{flex:1;resize:none;max-height:140px;background:transparent;color:#fff;border:0;outline:0;padding:10px}.app footer{text-align:center;font-size:11px;padding:0 10px 12px}.app #prev{width:min(850px,calc(100% - 28px));margin:0 auto 7px;position:relative}.app #prev img{max-width:220px;max-height:120px;border-radius:10px}.app #prev button{position:absolute;left:0;top:0;border:0;border-radius:50%;background:#000;color:#fff;width:26px;height:26px}.light{background:#f4f4f6;color:#111}.light .app aside{background:#fff;border-color:#ddd}.light .app main{background:#f4f4f6}.light .app header{border-color:#ddd}.light .msg.ai{background:#fff;border-color:#ddd}.light .app form,.light .bottom button{background:#fff;color:#222;border-color:#ddd}.light .app textarea{color:#111}
-/* ===== NOVA AI LOGO ===== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, "Segoe UI", sans-serif;
+  background: #0b0b10;
+  color: #f5f5f7;
+}
+
+.hide {
+  display: none !important;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+
+/* ================= AUTH ================= */
+
+.auth {
+  min-height: 100vh;
+
+  display: grid;
+
+  place-items: center;
+
+  padding: 20px;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #28144d,
+      #0b0b10 60%
+    );
+}
+
+
+.card {
+  width: min(430px, 100%);
+
+  padding: 30px;
+
+  background: #15151d;
+
+  border: 1px solid #30303d;
+
+  border-radius: 24px;
+
+  box-shadow:
+    0 20px 70px
+    rgba(0, 0, 0, .4);
+}
+
+
+.auth-title {
+  margin: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 30px;
+}
+
+
+.card h1 span,
+aside span {
+  color: #a66cff;
+}
+
+
+.card p {
+  color: #999;
+
+  margin-top: 10px;
+}
+
 
 .auth-logo {
   width: 58px;
+
   height: 58px;
+
   border-radius: 50%;
+
   object-fit: cover;
-  vertical-align: middle;
-  margin-left: 8px;
-  box-shadow: 0 0 22px rgba(138, 77, 255, .45);
+
+  box-shadow:
+    0 0 22px
+    rgba(138, 77, 255, .45);
 }
+
+
+/* ================= TABS ================= */
+
+.tabs {
+  display: flex;
+
+  gap: 8px;
+
+  margin: 20px 0;
+}
+
+
+.tabs button {
+  flex: 1;
+
+  padding: 11px;
+
+  border: 1px solid #333;
+
+  background: #20202a;
+
+  color: #ddd;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+
+.tabs .active {
+  background: #8a4dff;
+
+  color: #fff;
+
+  border-color: #8a4dff;
+}
+
+
+/* ================= INPUTS ================= */
+
+.card input:not([type="checkbox"]) {
+  width: 100%;
+
+  padding: 13px;
+
+  margin: 6px 0;
+
+  background: #0e0e14;
+
+  color: #fff;
+
+  border: 1px solid #333;
+
+  border-radius: 11px;
+
+  outline: none;
+}
+
+
+.card input:not([type="checkbox"]):focus {
+  border-color: #8a4dff;
+}
+
+
+.card label {
+  display: block;
+
+  margin: 10px 0;
+
+  color: #bbb;
+}
+
+
+.remember {
+  display: flex !important;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.primary {
+  width: 100%;
+
+  padding: 13px;
+
+  background: #8a4dff;
+
+  color: #fff;
+
+  border: 0;
+
+  border-radius: 11px;
+
+  cursor: pointer;
+}
+
+
+.primary:hover {
+  background: #9b68ff;
+}
+
+
+.err {
+  color: #ff7777;
+
+  min-height: 22px;
+
+  margin-top: 8px;
+}
+
+
+/* ================= APP ================= */
+
+.app {
+  height: 100vh;
+
+  display: flex;
+}
+
+
+.app aside {
+  width: 270px;
+
+  background: #101017;
+
+  border-left: 1px solid #292936;
+
+  padding: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* ================= BRAND ================= */
 
 .brand {
   display: flex;
+
   align-items: center;
+
   gap: 11px;
+
   margin-bottom: 18px;
 }
 
+
 .nova-logo {
   width: 48px;
+
   height: 48px;
+
   border-radius: 50%;
+
   object-fit: cover;
-  box-shadow: 0 0 18px rgba(138, 77, 255, .35);
+
+  box-shadow:
+    0 0 18px
+    rgba(138, 77, 255, .35);
 }
+
 
 .brand b {
   display: block;
+
   font-size: 21px;
 }
 
+
 .brand small {
   display: block;
+
   font-size: 10px;
+
   color: #888;
+
   margin-top: 3px;
 }
+
+
+/* ================= NEW CHAT ================= */
+
+.app aside > button {
+  margin: 20px 0 10px;
+
+  padding: 12px;
+
+  background: #8a4dff;
+
+  color: white;
+
+  border: 0;
+
+  border-radius: 11px;
+
+  cursor: pointer;
+}
+
+
+/* ================= CHAT LIST ================= */
+
+#list {
+  overflow-y: auto;
+}
+
+
+.chat {
+  padding: 11px;
+
+  border-radius: 10px;
+
+  color: #ccc;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  cursor: pointer;
+
+  margin-bottom: 3px;
+}
+
+
+.chat.active,
+.chat:hover {
+  background: #20202a;
+}
+
+
+/* ================= BOTTOM ================= */
+
+.bottom {
+  margin-top: auto;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+.bottom button {
+  padding: 11px;
+
+  background: #20202a;
+
+  color: #ddd;
+
+  border: 1px solid #333;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+}
+
+
+/* ================= MAIN ================= */
+
+.app main {
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+
+/* ================= HEADER ================= */
+
+.app header {
+  height: 68px;
+
+  padding: 0 22px;
+
+  border-bottom: 1px solid #292936;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+}
+
 
 .chat-brand {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
 }
 
+
 .chat-logo {
   width: 43px;
+
   height: 43px;
+
   border-radius: 50%;
+
   object-fit: cover;
-  box-shadow: 0 0 16px rgba(138, 77, 255, .35);
+
+  box-shadow:
+    0 0 16px
+    rgba(138, 77, 255, .35);
 }
+
 
 .chat-brand strong {
   display: block;
+
   font-size: 16px;
 }
 
+
 .chat-brand small {
   display: block;
+
   font-size: 11px;
+
   color: #4ddd89;
+
   margin-top: 3px;
 }
 
 
-/* ===== NOVA AI MESSAGE AVATAR ===== */
+/* ================= MESSAGES ================= */
+
+#msgs {
+  flex: 1;
+
+  overflow: auto;
+
+  padding:
+    28px
+    max(16px, calc((100% - 850px) / 2));
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 15px;
+}
+
+
+.msg {
+  max-width: 78%;
+
+  padding: 13px 16px;
+
+  border-radius: 16px;
+
+  line-height: 1.7;
+
+  white-space: pre-wrap;
+
+  word-break: break-word;
+}
+
+
+.msg.user {
+  align-self: flex-start;
+
+  background: #7540d7;
+}
+
 
 .msg.ai {
+  align-self: flex-end;
+
+  background: #181820;
+
+  border: 1px solid #2b2b36;
+
   position: relative;
+
   margin-right: 52px;
 }
 
+
 .msg.ai::before {
   content: "";
+
   position: absolute;
+
   right: -52px;
+
   top: 0;
+
   width: 40px;
+
   height: 40px;
+
   border-radius: 50%;
-  background-image: url("/nova-icon-192.png");
+
+  background-image:
+    url("/nova-icon-192.png");
+
   background-size: cover;
+
   background-position: center;
-  box-shadow: 0 0 16px rgba(138, 77, 255, .4);
+
+  box-shadow:
+    0 0 16px
+    rgba(138, 77, 255, .4);
 }
 
 
-/* ===== MOBILE ===== */
+.loading {
+  opacity: .7;
+
+  animation:
+    novaPulse 1.2s infinite;
+}
+
+
+@keyframes novaPulse {
+
+  0% {
+    opacity: .4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: .4;
+  }
+
+}
+
+
+/* ================= INPUT ================= */
+
+.app form {
+  width:
+    min(850px, calc(100% - 28px));
+
+  margin:
+    0 auto 7px;
+
+  display: flex;
+
+  gap: 8px;
+
+  align-items: end;
+
+  padding: 8px;
+
+  background: #15151d;
+
+  border: 1px solid #333;
+
+  border-radius: 17px;
+}
+
+
+.attach,
+.send {
+  width: 42px;
+
+  height: 42px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 11px;
+
+  cursor: pointer;
+}
+
+
+.attach {
+  background: #252530;
+}
+
+
+.send {
+  border: 0;
+
+  background: #8a4dff;
+
+  color: #fff;
+}
+
+
+.app textarea {
+  flex: 1;
+
+  resize: none;
+
+  max-height: 140px;
+
+  background: transparent;
+
+  color: #fff;
+
+  border: 0;
+
+  outline: 0;
+
+  padding: 10px;
+}
+
+
+/* ================= IMAGE PREVIEW ================= */
+
+.app #prev {
+  width:
+    min(850px, calc(100% - 28px));
+
+  margin: 0 auto 7px;
+
+  position: relative;
+}
+
+
+.app #prev img {
+  max-width: 220px;
+
+  max-height: 120px;
+
+  border-radius: 10px;
+}
+
+
+.app #prev button {
+  position: absolute;
+
+  left: 0;
+
+  top: 0;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: #000;
+
+  color: #fff;
+
+  width: 26px;
+
+  height: 26px;
+
+  cursor: pointer;
+}
+
+
+/* ================= FOOTER ================= */
+
+.app footer {
+  text-align: center;
+
+  font-size: 11px;
+
+  color: #999;
+
+  padding:
+    0 10px 12px;
+}
+
+
+/* ================= LIGHT MODE ================= */
+
+.light {
+  background: #f4f4f6;
+
+  color: #111;
+}
+
+
+.light .app aside {
+  background: #fff;
+
+  border-color: #ddd;
+}
+
+
+.light .app main {
+  background: #f4f4f6;
+}
+
+
+.light .app header {
+  border-color: #ddd;
+}
+
+
+.light .msg.ai {
+  background: #fff;
+
+  border-color: #ddd;
+
+  color: #111;
+}
+
+
+.light .app form,
+.light .bottom button {
+  background: #fff;
+
+  color: #222;
+
+  border-color: #ddd;
+}
+
+
+.light .app textarea {
+  color: #111;
+}
+
+
+/* ================= MOBILE ================= */
 
 @media (max-width: 700px) {
 
@@ -95,27 +728,70 @@
     width: 220px;
   }
 
+
   .msg {
     max-width: 86%;
   }
+
 
   .msg.ai {
     margin-right: 45px;
   }
 
+
   .msg.ai::before {
     right: -45px;
+
     width: 34px;
+
     height: 34px;
   }
 
+
   .chat-logo {
     width: 38px;
+
     height: 38px;
   }
 
+
   .nova-logo {
     width: 42px;
+
     height: 42px;
   }
+
+}
+
+
+@media (max-width: 520px) {
+
+  .app aside {
+    width: 190px;
+
+    padding: 12px;
+  }
+
+
+  .brand small {
+    display: none;
+  }
+
+
+  .brand b {
+    font-size: 17px;
+  }
+
+
+  .auth-logo {
+    width: 48px;
+
+    height: 48px;
+  }
+
+
+  .auth-title {
+    font-size: 25px;
+  }
+
 }
