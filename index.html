@@ -222,18 +222,45 @@
 
       <form id="cf">
 
-        <label class="attach">
+      <div class="attach-menu">
 
-          ＋
+  <button
+    type="button"
+    id="attachBtn"
+    class="attach"
+  >
+    ＋
+  </button>
 
-          <input
-            id="img"
-            type="file"
-            accept="image/*"
-            hidden
-          >
+  <div
+    id="attachOptions"
+    class="attach-options hide"
+  >
 
-        </label>
+    <button
+      type="button"
+      id="addImageBtn"
+    >
+      🖼️ إضافة صور
+    </button>
+
+    <button
+      type="button"
+      id="createImageBtn"
+    >
+      ✨ إنشاء صور
+    </button>
+
+  </div>
+
+  <input
+    id="img"
+    type="file"
+    accept="image/*"
+    hidden
+  >
+
+</div>
 
 
         <textarea
