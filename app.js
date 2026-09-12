@@ -990,16 +990,108 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-  createImageBtn.addEventListener("click", function () {
+ createImageBtn.addEventListener("click", async function () {
 
-    attachOptions.classList.add("hide");
+  attachOptions.classList.add("hide");
 
-    textInput.value =
-      "✨ إنشاء صورة: ";
+  const prompt = textInput.value.trim();
 
+  if (!prompt) {
+    textInput.value = "";
+    textInput.placeholder =
+      "اكتب وصف الصورة أولًا...";
     textInput.focus();
+    return;
+  }
 
-  });
+  textInput.value = "";
+  textInput.placeholder =
+    "NOVA AI ينشئ الصورة...";
+
+  const loading =
+    document.createElement("div");
+
+  loading.className =
+    "msg ai loading";
+
+  loading.textContent =
+    "✨ NOVA AI ينشئ الصورة...";
+
+  messagesBox.appendChild(loading);
+
+  messagesBox.scrollTop =
+    messagesBox.scrollHeight;
+
+  try {
+
+    const response =
+      await fetch("/api/image", {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+          prompt: prompt
+        })
+      });
+
+    const data =
+      await response.json();
+
+    loading.remove();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        "فشل إنشاء الصورة."
+      );
+    }
+
+    const imageMessage =
+      document.createElement("div");
+
+    imageMessage.className =
+      "msg ai image-message";
+
+    const image =
+      document.createElement("img");
+
+    image.src =
+      "data:" +
+      data.mimeType +
+      ";base64," +
+      data.image;
+
+    image.alt =
+      "صورة تم إنشاؤها بواسطة NOVA AI";
+
+    imageMessage.appendChild(image);
+
+    messagesBox.appendChild(
+      imageMessage
+    );
+
+    messagesBox.scrollTop =
+      messagesBox.scrollHeight;
+
+  } catch (error) {
+
+    loading.remove();
+
+    addMessageToScreen(
+      "assistant",
+      "تعذر إنشاء الصورة: " +
+      error.message
+    );
+
+  }
+
+  textInput.placeholder =
+    "اكتب رسالتك إلى NOVA AI...";
+});
 
 
   document.addEventListener("click", function (event) {
