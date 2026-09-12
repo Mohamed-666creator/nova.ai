@@ -795,3 +795,129 @@ aside span {
   }
 
 }
+/* ================= ATTACH MENU ================= */
+
+.attach-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+
+.attach {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border: 0;
+
+  background: #252530;
+  color: #fff;
+
+  border-radius: 11px;
+
+  cursor: pointer;
+
+  font-size: 22px;
+
+  transition:
+    background .2s,
+    transform .2s;
+}
+
+
+.attach:hover {
+  background: #343441;
+}
+
+
+.attach-options {
+  position: absolute;
+
+  bottom: 52px;
+
+  right: 0;
+
+  width: 190px;
+
+  padding: 7px;
+
+  background: #181820;
+
+  border: 1px solid #353544;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 15px 40px
+    rgba(0,0,0,.45);
+
+  z-index: 50;
+
+  animation: menuIn .15s ease;
+}
+
+
+.attach-options button {
+  width: 100%;
+
+  padding: 12px 13px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #eee;
+
+  border-radius: 10px;
+
+  text-align: right;
+
+  cursor: pointer;
+
+  font-size: 14px;
+}
+
+
+.attach-options button:hover {
+  background: #292936;
+}
+
+
+@keyframes menuIn {
+
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+
+/* LIGHT MODE */
+
+.light .attach-options {
+  background: #fff;
+
+  border-color: #ddd;
+
+  box-shadow:
+    0 15px 40px
+    rgba(0,0,0,.15);
+}
+
+
+.light .attach-options button {
+  color: #222;
+}
+
+
+.light .attach-options button:hover {
+  background: #f0f0f4;
+}
