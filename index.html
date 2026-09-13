@@ -36,7 +36,6 @@
   <link rel="stylesheet" href="style.css">
 </head>
 
-
 <body>
 
   <!-- ================= LOGIN ================= -->
@@ -57,32 +56,21 @@
 
       </h1>
 
-
       <p>
         ذكاء اصطناعي حقيقي وآمن
       </p>
 
-
       <div class="tabs">
 
-        <button
-          id="lt"
-          class="active"
-          type="button"
-        >
+        <button id="lt" class="active" type="button">
           تسجيل الدخول
         </button>
 
-
-        <button
-          id="st"
-          type="button"
-        >
+        <button id="st" type="button">
           إنشاء حساب
         </button>
 
       </div>
-
 
       <form id="af">
 
@@ -93,7 +81,6 @@
           autocomplete="name"
         >
 
-
         <input
           id="email"
           type="email"
@@ -102,7 +89,6 @@
           required
         >
 
-
         <input
           id="pass"
           type="password"
@@ -110,7 +96,6 @@
           autocomplete="current-password"
           required
         >
-
 
         <label class="remember">
 
@@ -124,7 +109,6 @@
 
         </label>
 
-
         <button
           type="submit"
           class="primary"
@@ -133,14 +117,9 @@
           دخول
         </button>
 
-
-        <div
-          id="ae"
-          class="err"
-        ></div>
+        <div id="ae" class="err"></div>
 
       </form>
-
 
       <small>
         الحساب التجريبي يُحفظ على هذا الجهاز فقط.
@@ -151,14 +130,9 @@
   </div>
 
 
-
   <!-- ================= APP ================= -->
 
-  <div
-    id="app"
-    class="app hide"
-  >
-
+  <div id="app" class="app hide">
 
     <!-- ================= SIDEBAR ================= -->
 
@@ -172,13 +146,11 @@
           alt="NOVA AI"
         >
 
-
         <div>
 
           <b>
             NOVA <span>AI</span>
           </b>
-
 
           <small>
             AI Assistant
@@ -188,32 +160,19 @@
 
       </div>
 
-
-      <button
-        id="new"
-        type="button"
-      >
+      <button id="new" type="button">
         ＋ محادثة جديدة
       </button>
 
-
       <div id="list"></div>
-
 
       <div class="bottom">
 
-        <button
-          id="theme"
-          type="button"
-        >
+        <button id="theme" type="button">
           ☾ المظهر
         </button>
 
-
-        <button
-          id="logout"
-          type="button"
-        >
+        <button id="logout" type="button">
           ⇥ تسجيل الخروج
         </button>
 
@@ -222,13 +181,9 @@
     </aside>
 
 
-
     <!-- ================= MAIN CHAT ================= -->
 
     <main>
-
-
-      <!-- HEADER -->
 
       <header>
 
@@ -240,13 +195,11 @@
             alt="NOVA AI"
           >
 
-
           <div>
 
             <strong>
               NOVA AI
             </strong>
-
 
             <small>
               ● متصل
@@ -256,11 +209,9 @@
 
         </div>
 
-
         <div id="user"></div>
 
       </header>
-
 
 
       <!-- ================= MESSAGES ================= -->
@@ -268,19 +219,14 @@
       <section id="msgs"></section>
 
 
-
       <!-- ================= IMAGE PREVIEW ================= -->
 
-      <div
-        id="prev"
-        class="hide"
-      >
+      <div id="prev" class="hide">
 
         <img
           id="pi"
           alt="معاينة الصورة"
         >
-
 
         <button
           id="rm"
@@ -293,16 +239,13 @@
       </div>
 
 
-
       <!-- ================= CHAT INPUT ================= -->
 
       <form id="cf">
 
-
         <!-- ATTACH MENU -->
 
         <div class="attach-menu">
-
 
           <button
             type="button"
@@ -313,31 +256,19 @@
             ＋
           </button>
 
-
           <div
             id="attachOptions"
             class="attach-options hide"
           >
 
-
             <button
               type="button"
               id="addImageBtn"
             >
-              🖼️ إضافة صور
+              🖼️ إضافة صورة
             </button>
-
-
-            <button
-              type="button"
-              id="createImageBtn"
-            >
-              ✨ إنشاء صور
-            </button>
-
 
           </div>
-
 
           <input
             id="img"
@@ -347,7 +278,6 @@
           >
 
         </div>
-
 
 
         <!-- TEXT -->
@@ -360,7 +290,6 @@
         ></textarea>
 
 
-
         <!-- SEND -->
 
         <button
@@ -371,9 +300,7 @@
           ➤
         </button>
 
-
       </form>
-
 
 
       <!-- ================= FOOTER ================= -->
@@ -385,14 +312,10 @@
 
       </footer>
 
-
     </main>
 
   </div>
 
-
-
-  <!-- ================= JAVASCRIPT ================= -->
 
   <script src="app.js"></script>
 
