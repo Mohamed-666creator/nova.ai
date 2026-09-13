@@ -56,17 +56,22 @@
 
       </h1>
 
-      <p>
-        ذكاء اصطناعي حقيقي وآمن
-      </p>
+      <p>ذكاء اصطناعي حقيقي وآمن</p>
 
       <div class="tabs">
 
-        <button id="lt" class="active" type="button">
+        <button
+          id="lt"
+          class="active"
+          type="button"
+        >
           تسجيل الدخول
         </button>
 
-        <button id="st" type="button">
+        <button
+          id="st"
+          type="button"
+        >
           إنشاء حساب
         </button>
 
@@ -136,7 +141,19 @@
 
     <!-- ================= SIDEBAR ================= -->
 
-    <aside>
+    <aside id="sidebar">
+
+      <!-- زر إغلاق السايد بار -->
+
+      <button
+        id="sidebarClose"
+        class="sidebar-close"
+        type="button"
+        aria-label="إغلاق القائمة"
+      >
+        ×
+      </button>
+
 
       <div class="brand">
 
@@ -160,19 +177,32 @@
 
       </div>
 
-      <button id="new" type="button">
+
+      <button
+        id="new"
+        type="button"
+        class="new-chat"
+      >
         ＋ محادثة جديدة
       </button>
 
+
       <div id="list"></div>
+
 
       <div class="bottom">
 
-        <button id="theme" type="button">
-          ☾ المظهر
+        <button
+          id="theme"
+          type="button"
+        >
+          ☀️ الوضع الفاتح
         </button>
 
-        <button id="logout" type="button">
+        <button
+          id="logout"
+          type="button"
+        >
           ⇥ تسجيل الخروج
         </button>
 
@@ -181,11 +211,34 @@
     </aside>
 
 
-    <!-- ================= MAIN CHAT ================= -->
+    <!-- OVERLAY -->
+
+    <div
+      id="sidebarOverlay"
+      class="sidebar-overlay"
+    ></div>
+
+
+    <!-- ================= MAIN ================= -->
 
     <main>
 
+      <!-- HEADER -->
+
       <header>
+
+        <!-- زر السايد بار -->
+
+        <button
+          id="sidebarToggle"
+          class="sidebar-toggle"
+          type="button"
+          aria-label="فتح السايد بار"
+          title="فتح السايد بار"
+        >
+          ☰
+        </button>
+
 
         <div class="chat-brand">
 
@@ -209,6 +262,7 @@
 
         </div>
 
+
         <div id="user"></div>
 
       </header>
@@ -221,7 +275,10 @@
 
       <!-- ================= IMAGE PREVIEW ================= -->
 
-      <div id="prev" class="hide">
+      <div
+        id="prev"
+        class="hide"
+      >
 
         <img
           id="pi"
@@ -243,7 +300,7 @@
 
       <form id="cf">
 
-        <!-- ATTACH MENU -->
+        <!-- ATTACH -->
 
         <div class="attach-menu">
 
@@ -252,6 +309,7 @@
             id="attachBtn"
             class="attach"
             aria-label="إرفاق"
+            title="إرفاق صورة"
           >
             ＋
           </button>
@@ -296,6 +354,7 @@
           class="send"
           type="submit"
           aria-label="إرسال"
+          title="إرسال"
         >
           ➤
         </button>
@@ -303,7 +362,7 @@
       </form>
 
 
-      <!-- ================= FOOTER ================= -->
+      <!-- FOOTER -->
 
       <footer>
 
