@@ -943,73 +943,7 @@ aside span {
   box-shadow:
     0 8px 30px
     rgba(0, 0, 0, .35);
-}
-/* ================= NOVA EFFECTS ================= */
-
-.msg {
-  animation: novaMessageIn .22s ease-out;
-}
-
-@keyframes novaMessageIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(.98);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.attach:hover {
-  transform: translateY(-1px);
-}
-
-.send {
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease,
-    background .15s ease;
-}
-
-.send:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 6px 20px
-    rgba(138, 77, 255, .35);
-}
-
-.send:active,
-.attach:active {
-  transform: scale(.94);
-}
-
-.image-message {
-  padding: 8px !important;
-  max-width: min(520px, 78%);
-}
-
-.image-message img {
-  display: block;
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  border-radius: 12px;
-  box-shadow:
-    0 8px 30px
-    rgba(0, 0, 0, .35);
-  animation: novaImageIn .3s ease-out;
-}
-
-@keyframes novaImageIn {
-  from {
-    opacity: 0;
-    transform: scale(.96);
-  }
-/* =========================
-   NOVA AI EFFECTS
-========================= */
+}/* ================= NOVA EFFECTS ================= */
 
 .msg {
   animation: novaMessageIn .22s ease-out;
@@ -1028,9 +962,7 @@ aside span {
 }
 
 
-/* =========================
-   SEND BUTTON
-========================= */
+/* ================= SEND BUTTON ================= */
 
 .send {
   transition:
@@ -1040,6 +972,7 @@ aside span {
 }
 
 .send:hover {
+  background: #9963ff;
   transform: translateY(-2px);
 
   box-shadow:
@@ -1052,9 +985,7 @@ aside span {
 }
 
 
-/* =========================
-   ATTACH BUTTON
-========================= */
+/* ================= ATTACH BUTTON ================= */
 
 .attach {
   transition:
@@ -1071,9 +1002,7 @@ aside span {
 }
 
 
-/* =========================
-   GENERATED IMAGE
-========================= */
+/* ================= GENERATED IMAGE ================= */
 
 .image-message {
   padding: 8px !important;
@@ -1087,10 +1016,8 @@ aside span {
 
 .image-message img {
   display: block;
-
   width: 100%;
   max-width: 500px;
-
   height: auto;
 
   border-radius: 14px;
@@ -1104,7 +1031,6 @@ aside span {
 }
 
 @keyframes novaImageIn {
-
   from {
     opacity: 0;
     transform:
@@ -1121,32 +1047,23 @@ aside span {
 }
 
 
-/* =========================
-   IMAGE LOADING
-========================= */
+/* ================= IMAGE LOADING ================= */
 
 .image-loading {
   display: flex;
-
   align-items: center;
-
   gap: 12px;
 }
-
 
 .image-loading strong {
   display: block;
 }
 
-
 .image-loading small {
   display: block;
-
   margin-top: 3px;
-
   opacity: .65;
 }
-
 
 .image-spinner {
   width: 24px;
@@ -1155,7 +1072,6 @@ aside span {
   border-radius: 50%;
 
   border: 3px solid rgba(255,255,255,.15);
-
   border-top-color: currentColor;
 
   animation:
@@ -1169,18 +1085,13 @@ aside span {
 }
 
 
-/* =========================
-   TYPING
-========================= */
+/* ================= TYPING ================= */
 
 .typing {
   display: flex;
-
   align-items: center;
-
   gap: 5px;
 }
-
 
 .typing span {
   width: 7px;
@@ -1196,7 +1107,6 @@ aside span {
     novaTyping 1s infinite;
 }
 
-
 .typing span:nth-child(2) {
   animation-delay: .15s;
 }
@@ -1205,9 +1115,7 @@ aside span {
   animation-delay: .3s;
 }
 
-
 @keyframes novaTyping {
-
   0%,
   100% {
     opacity: .25;
@@ -1221,26 +1129,19 @@ aside span {
 }
 
 
-/* =========================
-   IMAGE CAPTION
-========================= */
+/* ================= IMAGE CAPTION ================= */
 
 .image-caption {
   padding: 10px 4px 3px;
-
   font-size: 13px;
-
   opacity: .75;
 }
 
 
-/* =========================
-   TEXTAREA
-========================= */
+/* ================= TEXTAREA EFFECT ================= */
 
 #text {
   transition:
-    border-color .2s ease,
     box-shadow .2s ease;
 }
 
@@ -1251,8 +1152,14 @@ aside span {
     0 0 0 3px
     rgba(138, 77, 255, .12);
 }
-  to {
-    opacity: 1;
-    transform: scale(1);
+
+
+/* ================= MOBILE IMAGE ================= */
+
+@media (max-width: 520px) {
+
+  .image-message {
+    max-width: 86%;
   }
+
 }
