@@ -18,7 +18,7 @@ export default async function handler(req, res) {
 
     if (!apiKey) {
       return res.status(500).json({
-        error: "GEMINI_API_KEY غير موجود في Vercel"
+        error: "GEMINI_API_KEY غير موجود في Vercel."
       });
     }
 
@@ -35,16 +35,14 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           model: "gemini-3.1-flash-image",
 
-          input: String(prompt),
+          input: String(prompt).trim(),
 
           response_format: {
             type: "image",
             mime_type: "image/png",
             aspect_ratio: "1:1",
             image_size: "1K"
-          },
-
-          store: false
+          }
         })
       }
     );
@@ -52,6 +50,8 @@ export default async function handler(req, res) {
     const data = await response.json();
 
     if (!response.ok) {
+      console.error("Gemini image error:", data);
+
       return res.status(response.status).json({
         error:
           data?.error?.message ||
@@ -59,73 +59,51 @@ export default async function handler(req, res) {
       });
     }
 
-    let imageData = null;
-    let mimeType = "image/png";
-
-    // بعض الاستجابات ترجع الصورة مباشرة
+    // الطريقة الأساسية في Gemini Interactions API
     if (data?.output_image?.data) {
-      imageData = data.output_image.data;
-
-      if (data.output_image.mime_type) {
-        mimeType = data.output_image.mime_type;
-      }
-    }
-
-    // وبعض الاستجابات قد تضع الصورة داخل steps
-    if (!imageData && Array.isArray(data?.steps)) {
-      for (const step of data.steps) {
-        if (!Array.isArray(step.content)) continue;
-
-        for (const content of step.content) {
-          if (
-            content?.type === "output_image" &&
-            content?.data
-          ) {
-            imageData = content.data;
-
-            if (content.mime_type) {
-              mimeType = content.mime_type;
-            }
-
-            break;
-          }
-
-          if (
-            content?.type === "image" &&
-            content?.data
-          ) {
-            imageData = content.data;
-
-            if (content.mime_type) {
-              mimeType = content.mime_type;
-            }
-
-            break;
-          }
-        }
-
-        if (imageData) break;
-      }
-    }
-
-    if (!imageData) {
-      console.error(
-        "Gemini image response:",
-        JSON.stringify(data)
-      );
-
-      return res.status(500).json({
-        error: "لم يتم إرجاع صورة من Gemini."
+      return res.status(200).json({
+        image: data.output_image.data,
+        mimeType:
+          data.output_image.mime_type ||
+          "image/png"
       });
     }
 
-    return res.status(200).json({
-      image: imageData,
-      mimeType
+    // احتياطًا لو جاءت الصورة داخل steps
+    if (Array.isArray(data?.steps)) {
+      for (const step of data.steps) {
+        if (
+          step?.type === "model_output" &&
+          Array.isArray(step.content)
+        ) {
+          for (const block of step.content) {
+            if (
+              block?.type === "image" &&
+              block?.data
+            ) {
+              return res.status(200).json({
+                image: block.data,
+                mimeType:
+                  block.mime_type ||
+                  "image/png"
+              });
+            }
+          }
+        }
+      }
+    }
+
+    console.error(
+      "Gemini returned no image:",
+      JSON.stringify(data)
+    );
+
+    return res.status(500).json({
+      error: "Gemini لم يُرجع صورة."
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Image API error:", error);
 
     return res.status(500).json({
       error:
