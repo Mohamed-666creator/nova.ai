@@ -1007,7 +1007,250 @@ aside span {
     opacity: 0;
     transform: scale(.96);
   }
+/* =========================
+   NOVA AI EFFECTS
+========================= */
 
+.msg {
+  animation: novaMessageIn .22s ease-out;
+}
+
+@keyframes novaMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =========================
+   SEND BUTTON
+========================= */
+
+.send {
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+.send:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 22px
+    rgba(138, 77, 255, .38);
+}
+
+.send:active {
+  transform: scale(.92);
+}
+
+
+/* =========================
+   ATTACH BUTTON
+========================= */
+
+.attach {
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease;
+}
+
+.attach:hover {
+  transform: translateY(-2px);
+}
+
+.attach:active {
+  transform: scale(.92);
+}
+
+
+/* =========================
+   GENERATED IMAGE
+========================= */
+
+.image-message {
+  padding: 8px !important;
+  max-width: min(520px, 78%);
+}
+
+.image-message .bubble {
+  padding: 0;
+  overflow: hidden;
+}
+
+.image-message img {
+  display: block;
+
+  width: 100%;
+  max-width: 500px;
+
+  height: auto;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 10px 35px
+    rgba(0, 0, 0, .35);
+
+  animation:
+    novaImageIn .35s ease-out;
+}
+
+@keyframes novaImageIn {
+
+  from {
+    opacity: 0;
+    transform:
+      scale(.94)
+      translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      scale(1)
+      translateY(0);
+  }
+}
+
+
+/* =========================
+   IMAGE LOADING
+========================= */
+
+.image-loading {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+}
+
+
+.image-loading strong {
+  display: block;
+}
+
+
+.image-loading small {
+  display: block;
+
+  margin-top: 3px;
+
+  opacity: .65;
+}
+
+
+.image-spinner {
+  width: 24px;
+  height: 24px;
+
+  border-radius: 50%;
+
+  border: 3px solid rgba(255,255,255,.15);
+
+  border-top-color: currentColor;
+
+  animation:
+    novaSpin .8s linear infinite;
+}
+
+@keyframes novaSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* =========================
+   TYPING
+========================= */
+
+.typing {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+}
+
+
+.typing span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: currentColor;
+
+  opacity: .4;
+
+  animation:
+    novaTyping 1s infinite;
+}
+
+
+.typing span:nth-child(2) {
+  animation-delay: .15s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: .3s;
+}
+
+
+@keyframes novaTyping {
+
+  0%,
+  100% {
+    opacity: .25;
+    transform: translateY(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(-3px);
+  }
+}
+
+
+/* =========================
+   IMAGE CAPTION
+========================= */
+
+.image-caption {
+  padding: 10px 4px 3px;
+
+  font-size: 13px;
+
+  opacity: .75;
+}
+
+
+/* =========================
+   TEXTAREA
+========================= */
+
+#text {
+  transition:
+    border-color .2s ease,
+    box-shadow .2s ease;
+}
+
+#text:focus {
+  outline: none;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(138, 77, 255, .12);
+}
   to {
     opacity: 1;
     transform: scale(1);
