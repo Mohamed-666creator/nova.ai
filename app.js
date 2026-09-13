@@ -47,83 +47,105 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ================= SIDEBAR ================= */
 
-  let sidebarOverlay = null;
+let sidebarOverlay = null;
 
-  function createMobileSidebarControls() {
-    const header = document.querySelector(".app header");
+function createMobileSidebarControls() {
+  const header = document.querySelector(".app header");
 
-    if (!header) return;
+  if (!header) return;
 
-    let menuButton = document.getElementById("sidebarToggle");
+  let menuButton = document.getElementById("sidebarToggle");
 
-    if (!menuButton) {
-      menuButton = document.createElement("button");
+  if (!menuButton) {
+    menuButton = document.createElement("button");
 
-      menuButton.id = "sidebarToggle";
-      menuButton.type = "button";
-      menuButton.className = "sidebar-toggle";
-      menuButton.setAttribute("aria-label", "فتح القائمة");
-      menuButton.innerHTML = "☰";
+    menuButton.id = "sidebarToggle";
+    menuButton.type = "button";
+    menuButton.className = "sidebar-toggle";
+    menuButton.setAttribute("aria-label", "فتح القائمة");
+    menuButton.innerHTML = "☰";
 
-      header.insertBefore(menuButton, header.firstChild);
+    header.insertBefore(menuButton, header.firstChild);
 
-      menuButton.addEventListener("click", () => {
-        toggleSidebar();
-      });
-    }
-
-    sidebarOverlay = document.getElementById("sidebarOverlay");
-
-    if (!sidebarOverlay) {
-      sidebarOverlay = document.createElement("div");
-
-      sidebarOverlay.id = "sidebarOverlay";
-      sidebarOverlay.className = "sidebar-overlay";
-
-      document.querySelector(".app").appendChild(sidebarOverlay);
-
-      sidebarOverlay.addEventListener("click", () => {
-        closeSidebar();
-      });
-    }
+    menuButton.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleSidebar();
+    });
   }
 
-  function openSidebar() {
-    const appElement = document.querySelector(".app");
+  sidebarOverlay = document.getElementById("sidebarOverlay");
 
-    if (!appElement) return;
+  if (!sidebarOverlay) {
+    sidebarOverlay = document.createElement("div");
 
-    appElement.classList.add("sidebar-open");
+    sidebarOverlay.id = "sidebarOverlay";
+    sidebarOverlay.className = "sidebar-overlay";
 
-    if (sidebarOverlay) {
-      sidebarOverlay.classList.add("show");
-    }
-  }
+    document.querySelector(".app").appendChild(sidebarOverlay);
 
-  function closeSidebar() {
-    const appElement = document.querySelector(".app");
-
-    if (!appElement) return;
-
-    appElement.classList.remove("sidebar-open");
-
-    if (sidebarOverlay) {
-      sidebarOverlay.classList.remove("show");
-    }
-  }
-
-  function toggleSidebar() {
-    const appElement = document.querySelector(".app");
-
-    if (!appElement) return;
-
-    if (appElement.classList.contains("sidebar-open")) {
+    sidebarOverlay.addEventListener("click", () => {
       closeSidebar();
-    } else {
-      openSidebar();
-    }
+    });
   }
+}
 
+function openSidebar() {
+  const appElement = document.querySelector(".app");
+
+  if (!appElement) return;
+
+  appElement.classList.add("sidebar-open");
+
+  if (sidebarOverlay) {
+    sidebarOverlay.classList.add("show");
+  }
+}
+
+function closeSidebar() {
+  const appElement = document.querySelector(".app");
+
+  if (!appElement) return;
+
+  appElement.classList.remove("sidebar-open");
+
+  if (sidebarOverlay) {
+    sidebarOverlay.classList.remove("show");
+  }
+}
+
+function toggleSidebar() {
+  const appElement = document.querySelector(".app");
+
+  if (!appElement) return;
+
+  if (appElement.classList.contains("sidebar-open")) {
+    closeSidebar();
+  } else {
+    openSidebar();
+  }
+}
+
+/* إغلاق الشريط بزر الرجوع في الموبايل */
+window.addEventListener("popstate", () => {
+  closeSidebar();
+});
+
+/* إغلاق الشريط عند الضغط خارج القائمة */
+document.addEventListener("click", (event) => {
+  const appElement = document.querySelector(".app");
+  const sidebar = document.querySelector(".app aside");
+  const menuButton = document.getElementById("sidebarToggle");
+
+  if (!appElement || !sidebar) return;
+
+  if (
+    appElement.classList.contains("sidebar-open") &&
+    !sidebar.contains(event.target) &&
+    event.target !== menuButton
+  ) {
+    closeSidebar();
+  }
+});
   /* ================= AUTH TABS ================= */
 
   function setAuthMode(mode) {
