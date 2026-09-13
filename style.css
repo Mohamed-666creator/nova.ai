@@ -944,3 +944,72 @@ aside span {
     0 8px 30px
     rgba(0, 0, 0, .35);
 }
+/* ================= NOVA EFFECTS ================= */
+
+.msg {
+  animation: novaMessageIn .22s ease-out;
+}
+
+@keyframes novaMessageIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.attach:hover {
+  transform: translateY(-1px);
+}
+
+.send {
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
+}
+
+.send:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 6px 20px
+    rgba(138, 77, 255, .35);
+}
+
+.send:active,
+.attach:active {
+  transform: scale(.94);
+}
+
+.image-message {
+  padding: 8px !important;
+  max-width: min(520px, 78%);
+}
+
+.image-message img {
+  display: block;
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow:
+    0 8px 30px
+    rgba(0, 0, 0, .35);
+  animation: novaImageIn .3s ease-out;
+}
+
+@keyframes novaImageIn {
+  from {
+    opacity: 0;
+    transform: scale(.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
