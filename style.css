@@ -1791,3 +1791,135 @@ aside span {
     height: 36px;
   }
 }
+/* =====================================================
+   NOVA MOBILE SIDEBAR CLOSE
+===================================================== */
+
+.sidebar-close {
+  display: none;
+
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  width: 40px;
+  height: 40px;
+
+  padding: 0;
+
+  border: 1px solid #3a3a48;
+  border-radius: 10px;
+
+  background: #20202a;
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 20px;
+  line-height: 1;
+
+  align-items: center;
+  justify-content: center;
+
+  z-index: 999;
+
+  transition:
+    background .2s ease,
+    transform .15s ease;
+}
+
+.sidebar-close:hover {
+  background: #35283f;
+}
+
+.sidebar-close:active {
+  transform: scale(.92);
+}
+
+
+/* =====================================================
+   MOBILE SIDEBAR
+===================================================== */
+
+@media (max-width: 700px) {
+
+  .app aside {
+    position: fixed;
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+
+    width: min(310px, 86vw);
+    min-width: 0;
+
+    height: 100dvh;
+
+    padding: 14px;
+
+    transform: translateX(105%);
+
+    transition:
+      transform .25s ease;
+
+    box-shadow:
+      -15px 0 45px rgba(0, 0, 0, .35);
+
+    z-index: 100;
+  }
+
+
+  .app.sidebar-open aside {
+    transform: translateX(0);
+  }
+
+
+  .sidebar-close {
+    display: flex;
+  }
+
+
+  .sidebar-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    background: rgba(0, 0, 0, .58);
+
+    opacity: 0;
+    visibility: hidden;
+
+    pointer-events: none;
+
+    z-index: 90;
+
+    transition:
+      opacity .25s ease,
+      visibility .25s ease;
+  }
+
+
+  .sidebar-overlay.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    pointer-events: auto;
+  }
+
+
+  .sidebar-toggle {
+    display: grid;
+
+    place-items: center;
+
+    position: relative;
+
+    z-index: 30;
+  }
+
+}
