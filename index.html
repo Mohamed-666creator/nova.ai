@@ -17,13 +17,25 @@
     content="NOVA AI, Nova AI, ذكاء اصطناعي, مساعد ذكاء اصطناعي"
   >
 
-  <link rel="canonical" href="https://nova-ai-gilt-eight.vercel.app/">
+  <link
+    rel="canonical"
+    href="https://nova-ai-gilt-eight.vercel.app/"
+  >
 
-  <link rel="icon" type="image/png" href="/nova-favicon-64.png">
-  <link rel="apple-touch-icon" href="/nova-icon-192.png">
+  <link
+    rel="icon"
+    type="image/png"
+    href="/nova-favicon-64.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="/nova-icon-192.png"
+  >
 
   <link rel="stylesheet" href="style.css">
 </head>
+
 
 <body>
 
@@ -34,6 +46,7 @@
     <div class="card">
 
       <h1 class="auth-title">
+
         <img
           src="/nova-icon-192.png"
           class="auth-logo"
@@ -41,19 +54,35 @@
         >
 
         NOVA <span>AI</span>
+
       </h1>
 
-      <p>ذكاء اصطناعي حقيقي وآمن</p>
+
+      <p>
+        ذكاء اصطناعي حقيقي وآمن
+      </p>
+
 
       <div class="tabs">
-        <button id="lt" class="active">
+
+        <button
+          id="lt"
+          class="active"
+          type="button"
+        >
           تسجيل الدخول
         </button>
 
-        <button id="st">
+
+        <button
+          id="st"
+          type="button"
+        >
           إنشاء حساب
         </button>
+
       </div>
+
 
       <form id="af">
 
@@ -61,23 +90,30 @@
           id="name"
           class="hide"
           placeholder="الاسم"
+          autocomplete="name"
         >
+
 
         <input
           id="email"
           type="email"
           placeholder="البريد الإلكتروني"
+          autocomplete="email"
           required
         >
+
 
         <input
           id="pass"
           type="password"
           placeholder="كلمة المرور"
+          autocomplete="current-password"
           required
         >
 
+
         <label class="remember">
+
           <input
             id="remember"
             type="checkbox"
@@ -85,7 +121,9 @@
           >
 
           تذكر الحساب على هذا الجهاز
+
         </label>
+
 
         <button
           type="submit"
@@ -95,12 +133,14 @@
           دخول
         </button>
 
+
         <div
           id="ae"
           class="err"
         ></div>
 
       </form>
+
 
       <small>
         الحساب التجريبي يُحفظ على هذا الجهاز فقط.
@@ -111,11 +151,16 @@
   </div>
 
 
+
   <!-- ================= APP ================= -->
 
-  <div id="app" class="app hide">
+  <div
+    id="app"
+    class="app hide"
+  >
 
-    <!-- SIDEBAR -->
+
+    <!-- ================= SIDEBAR ================= -->
 
     <aside>
 
@@ -127,11 +172,13 @@
           alt="NOVA AI"
         >
 
+
         <div>
 
           <b>
             NOVA <span>AI</span>
           </b>
+
 
           <small>
             AI Assistant
@@ -142,7 +189,10 @@
       </div>
 
 
-      <button id="new">
+      <button
+        id="new"
+        type="button"
+      >
         ＋ محادثة جديدة
       </button>
 
@@ -152,11 +202,18 @@
 
       <div class="bottom">
 
-        <button id="theme">
+        <button
+          id="theme"
+          type="button"
+        >
           ☾ المظهر
         </button>
 
-        <button id="logout">
+
+        <button
+          id="logout"
+          type="button"
+        >
           ⇥ تسجيل الخروج
         </button>
 
@@ -165,9 +222,13 @@
     </aside>
 
 
-    <!-- CHAT -->
+
+    <!-- ================= MAIN CHAT ================= -->
 
     <main>
+
+
+      <!-- HEADER -->
 
       <header>
 
@@ -179,11 +240,13 @@
             alt="NOVA AI"
           >
 
+
           <div>
 
             <strong>
               NOVA AI
             </strong>
+
 
             <small>
               ● متصل
@@ -199,96 +262,137 @@
       </header>
 
 
+
+      <!-- ================= MESSAGES ================= -->
+
       <section id="msgs"></section>
 
 
-      <!-- IMAGE PREVIEW -->
+
+      <!-- ================= IMAGE PREVIEW ================= -->
 
       <div
         id="prev"
         class="hide"
       >
 
-        <img id="pi">
+        <img
+          id="pi"
+          alt="معاينة الصورة"
+        >
 
-        <button id="rm">
+
+        <button
+          id="rm"
+          type="button"
+          aria-label="إزالة الصورة"
+        >
           ×
         </button>
 
       </div>
 
 
-      <!-- CHAT INPUT -->
+
+      <!-- ================= CHAT INPUT ================= -->
 
       <form id="cf">
 
-      <div class="attach-menu">
 
-  <button
-    type="button"
-    id="attachBtn"
-    class="attach"
-  >
-    ＋
-  </button>
+        <!-- ATTACH MENU -->
 
-  <div
-    id="attachOptions"
-    class="attach-options hide"
-  >
+        <div class="attach-menu">
 
-    <button
-      type="button"
-      id="addImageBtn"
-    >
-      🖼️ إضافة صور
-    </button>
 
-    <button
-      type="button"
-      id="createImageBtn"
-    >
-      ✨ إنشاء صور
-    </button>
+          <button
+            type="button"
+            id="attachBtn"
+            class="attach"
+            aria-label="إرفاق"
+          >
+            ＋
+          </button>
 
-  </div>
 
-  <input
-    id="img"
-    type="file"
-    accept="image/*"
-    hidden
-  >
+          <div
+            id="attachOptions"
+            class="attach-options hide"
+          >
 
-</div>
 
+            <button
+              type="button"
+              id="addImageBtn"
+            >
+              🖼️ إضافة صور
+            </button>
+
+
+            <button
+              type="button"
+              id="createImageBtn"
+            >
+              ✨ إنشاء صور
+            </button>
+
+
+          </div>
+
+
+          <input
+            id="img"
+            type="file"
+            accept="image/*"
+            hidden
+          >
+
+        </div>
+
+
+
+        <!-- TEXT -->
 
         <textarea
           id="text"
           rows="1"
           placeholder="اكتب رسالتك إلى NOVA AI..."
+          autocomplete="off"
         ></textarea>
 
+
+
+        <!-- SEND -->
 
         <button
           class="send"
           type="submit"
+          aria-label="إرسال"
         >
           ➤
         </button>
 
+
       </form>
 
 
+
+      <!-- ================= FOOTER ================= -->
+
       <footer>
+
         لا ترسل معلومات شخصية حساسة.
         NOVA AI يرفض المحتوى غير المناسب والخطير وغير القانوني.
+
       </footer>
+
 
     </main>
 
   </div>
 
+
+
+  <!-- ================= JAVASCRIPT ================= -->
 
   <script src="app.js"></script>
 
