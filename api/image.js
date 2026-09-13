@@ -65,7 +65,7 @@ export default async function handler(req, res) {
         image: data.output_image.data,
         mimeType:
           data.output_image.mime_type ||
-          "image/png"
+          "image/jpeg"
       });
     }
 
