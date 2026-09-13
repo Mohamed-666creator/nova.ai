@@ -687,12 +687,17 @@ aside span {
 
   inset: 0;
 
-  background:
-    rgba(0, 0, 0, .58);
+  width: 100vw;
+
+  height: 100vh;
+
+  background: rgba(0, 0, 0, .58);
 
   z-index: 90;
 
   opacity: 0;
+
+  pointer-events: none;
 
   transition:
     opacity .25s ease;
@@ -700,10 +705,12 @@ aside span {
 
 
 .sidebar-overlay.show {
+  display: block;
+
   opacity: 1;
+
+  pointer-events: auto;
 }
-
-
 /* =====================================================
    MESSAGES
 ===================================================== */
