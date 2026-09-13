@@ -26,13 +26,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const USERS_KEY = "nova_users";
   const CURRENT_KEY = "nova_current_user";
 
+
   function getUsers() {
     try {
-      return JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+      return JSON.parse(
+        localStorage.getItem(USERS_KEY) || "[]"
+      );
     } catch {
       return [];
     }
   }
+
 
   function saveUsers(users) {
     localStorage.setItem(
@@ -41,7 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+
   function showLogin() {
+
     authMode = "login";
 
     loginTab.classList.add("active");
@@ -58,7 +64,9 @@ document.addEventListener("DOMContentLoaded", () => {
     authError.textContent = "";
   }
 
+
   function showSignup() {
+
     authMode = "signup";
 
     signupTab.classList.add("active");
@@ -75,119 +83,190 @@ document.addEventListener("DOMContentLoaded", () => {
     authError.textContent = "";
   }
 
-  loginTab.addEventListener("click", showLogin);
-  signupTab.addEventListener("click", showSignup);
 
-  authForm.addEventListener("submit", (event) => {
-    event.preventDefault();
+  loginTab.addEventListener(
+    "click",
+    showLogin
+  );
 
-    authError.textContent = "";
 
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim().toLowerCase();
-    const password = passInput.value;
+  signupTab.addEventListener(
+    "click",
+    showSignup
+  );
 
-    if (!email || !password) {
-      authError.textContent =
-        "اكتب البريد الإلكتروني وكلمة المرور.";
-      return;
-    }
 
-    const users = getUsers();
+  authForm.addEventListener(
+    "submit",
+    (event) => {
 
-    if (authMode === "signup") {
+      event.preventDefault();
 
-      if (!name) {
-        authError.textContent = "اكتب اسمك.";
-        return;
-      }
+      authError.textContent = "";
 
-      if (password.length < 6) {
+      const name =
+        nameInput.value.trim();
+
+      const email =
+        emailInput.value.trim().toLowerCase();
+
+      const password =
+        passInput.value;
+
+
+      if (!email || !password) {
+
         authError.textContent =
-          "كلمة المرور يجب أن تكون 6 أحرف على الأقل.";
+          "اكتب البريد الإلكتروني وكلمة المرور.";
+
         return;
       }
 
-      if (
-        users.some(
-          user => user.email === email
-        )
-      ) {
-        authError.textContent =
-          "هذا البريد مسجل بالفعل.";
-        return;
-      }
 
-      const user = {
-        name,
-        email,
-        password
-      };
+      const users = getUsers();
 
-      users.push(user);
 
-      saveUsers(users);
+      // =========================
+      // SIGN UP
+      // =========================
 
-      localStorage.setItem(
-        CURRENT_KEY,
-        JSON.stringify({
+      if (authMode === "signup") {
+
+        if (!name) {
+
+          authError.textContent =
+            "اكتب اسمك.";
+
+          return;
+        }
+
+
+        if (password.length < 6) {
+
+          authError.textContent =
+            "كلمة المرور يجب أن تكون 6 أحرف على الأقل.";
+
+          return;
+        }
+
+
+        if (
+          users.some(
+            user => user.email === email
+          )
+        ) {
+
+          authError.textContent =
+            "هذا البريد مسجل بالفعل.";
+
+          return;
+        }
+
+
+        const user = {
+          name,
+          email,
+          password
+        };
+
+
+        users.push(user);
+
+        saveUsers(users);
+
+
+        localStorage.setItem(
+          CURRENT_KEY,
+          JSON.stringify({
+            name,
+            email
+          })
+        );
+
+
+        openApp({
           name,
           email
-        })
+        });
+
+        return;
+      }
+
+
+      // =========================
+      // LOGIN
+      // =========================
+
+      const user = users.find(
+        item =>
+          item.email === email &&
+          item.password === password
       );
+
+
+      if (!user) {
+
+        authError.textContent =
+          "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
+
+        return;
+      }
+
+
+      if (rememberInput.checked) {
+
+        localStorage.setItem(
+          CURRENT_KEY,
+          JSON.stringify({
+            name: user.name,
+            email: user.email
+          })
+        );
+      }
+
 
       openApp({
-        name,
-        email
+        name: user.name,
+        email: user.email
       });
 
-      return;
     }
-
-    const user = users.find(
-      item =>
-        item.email === email &&
-        item.password === password
-    );
-
-    if (!user) {
-      authError.textContent =
-        "البريد الإلكتروني أو كلمة المرور غير صحيحة.";
-      return;
-    }
-
-    if (rememberInput.checked) {
-      localStorage.setItem(
-        CURRENT_KEY,
-        JSON.stringify({
-          name: user.name,
-          email: user.email
-        })
-      );
-    }
-
-    openApp({
-      name: user.name,
-      email: user.email
-    });
-  });
+  );
 
 
   // =========================
   // APP ELEMENTS
   // =========================
 
-  const userBox = document.getElementById("user");
-  const messagesBox = document.getElementById("msgs");
-  const chatList = document.getElementById("list");
+  const userBox =
+    document.getElementById("user");
 
-  const newChatButton = document.getElementById("new");
-  const logoutButton = document.getElementById("logout");
-  const themeButton = document.getElementById("theme");
+  const messagesBox =
+    document.getElementById("msgs");
 
-  const chatForm = document.getElementById("cf");
-  const textInput = document.getElementById("text");
-  const sendButton = document.querySelector(".send");
+  const chatList =
+    document.getElementById("list");
+
+
+  const newChatButton =
+    document.getElementById("new");
+
+  const logoutButton =
+    document.getElementById("logout");
+
+  const themeButton =
+    document.getElementById("theme");
+
+
+  const chatForm =
+    document.getElementById("cf");
+
+  const textInput =
+    document.getElementById("text");
+
+  const sendButton =
+    document.querySelector(".send");
+
 
   const attachButton =
     document.getElementById("attachBtn");
@@ -195,14 +274,17 @@ document.addEventListener("DOMContentLoaded", () => {
   const attachOptions =
     document.getElementById("attachOptions");
 
+
   const addImageButton =
     document.getElementById("addImageBtn");
 
   const createImageButton =
     document.getElementById("createImageBtn");
 
+
   const imageInput =
     document.getElementById("img");
+
 
   const previewBox =
     document.getElementById("prev");
@@ -226,8 +308,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let attachedImage = null;
 
+  let imageGenerating = false;
+
+
   const theme =
     localStorage.getItem("nova_theme");
+
 
   if (theme === "light") {
     document.body.classList.add("light");
@@ -239,9 +325,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
 
   function chatsKey() {
+
     if (!currentUser) {
       return "nova_chats_unknown";
     }
+
 
     return (
       "nova_chats_" +
@@ -249,21 +337,29 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+
   function loadChats() {
+
     try {
+
       chats = JSON.parse(
         localStorage.getItem(chatsKey()) || "[]"
       );
+
     } catch {
+
       chats = [];
     }
+
 
     if (!Array.isArray(chats)) {
       chats = [];
     }
   }
 
+
   function saveChats() {
+
     localStorage.setItem(
       chatsKey(),
       JSON.stringify(chats)
@@ -280,20 +376,58 @@ document.addEventListener("DOMContentLoaded", () => {
     currentUser = user;
 
     auth.classList.add("hide");
+
     app.classList.remove("hide");
+
 
     userBox.textContent =
       user.name || user.email;
 
+
     loadChats();
 
+
     if (!chats.length) {
+
       createNewChat();
+
     } else {
+
       currentChat = chats[0];
+
       renderChatList();
+
       renderMessages();
     }
+  }
+
+
+  // =========================
+  // NEW CHAT
+  // =========================
+
+  function createNewChat() {
+
+    const chat = {
+
+      id: Date.now(),
+
+      title: "محادثة جديدة",
+
+      messages: []
+    };
+
+
+    chats.unshift(chat);
+
+    currentChat = chat;
+
+
+    saveChats();
+
+    renderChatList();
+
+    renderMessages();
   }
 
 
@@ -301,45 +435,32 @@ document.addEventListener("DOMContentLoaded", () => {
   // CHAT LIST
   // =========================
 
-  function createNewChat() {
-
-    const chat = {
-      id: Date.now(),
-      title: "محادثة جديدة",
-      messages: []
-    };
-
-    chats.unshift(chat);
-
-    currentChat = chat;
-
-    saveChats();
-
-    renderChatList();
-    renderMessages();
-  }
-
-
   function renderChatList() {
 
     chatList.innerHTML = "";
+
 
     chats.forEach(chat => {
 
       const item =
         document.createElement("div");
 
+
       item.className = "chat";
+
 
       if (
         currentChat &&
         chat.id === currentChat.id
       ) {
+
         item.classList.add("active");
       }
 
+
       item.textContent =
         chat.title || "محادثة جديدة";
+
 
       item.addEventListener(
         "click",
@@ -348,11 +469,14 @@ document.addEventListener("DOMContentLoaded", () => {
           currentChat = chat;
 
           renderChatList();
+
           renderMessages();
         }
       );
 
+
       chatList.appendChild(item);
+
     });
   }
 
@@ -371,22 +495,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const wrapper =
       document.createElement("div");
 
+
     wrapper.className =
       "msg " +
-      (role === "user"
-        ? "user"
-        : "ai");
+      (
+        role === "user"
+          ? "user"
+          : "ai"
+      );
 
 
-    // صورة حقيقية
+    // =========================
+    // REAL IMAGE
+    // =========================
+
     if (imageData) {
 
       wrapper.classList.add(
         "image-message"
       );
 
+
       const image =
         document.createElement("img");
+
 
       image.src =
         "data:" +
@@ -394,59 +526,92 @@ document.addEventListener("DOMContentLoaded", () => {
         ";base64," +
         imageData;
 
+
       image.alt =
         "NOVA AI generated image";
 
+
+      image.style.display = "block";
+
+      image.style.maxWidth = "500px";
+
+      image.style.width = "100%";
+
+      image.style.borderRadius = "14px";
+
+
       wrapper.appendChild(image);
+
 
       messagesBox.appendChild(wrapper);
 
+
       messagesBox.scrollTop =
         messagesBox.scrollHeight;
+
 
       return wrapper;
     }
 
 
-    // دعم Markdown image لو رجع من أي مكان
+    // =========================
+    // MARKDOWN IMAGE
+    // =========================
+
     const imageMarkdown =
       String(content || "").match(
         /!\[[^\]]*\]\((https?:\/\/[^)\s]+)\)/
       );
+
 
     if (imageMarkdown) {
 
       const image =
         document.createElement("img");
 
+
       image.src =
         imageMarkdown[1];
+
 
       image.alt =
         "NOVA AI image";
 
+
       image.style.display = "block";
+
       image.style.maxWidth = "500px";
+
       image.style.width = "100%";
+
       image.style.borderRadius = "14px";
+
 
       wrapper.appendChild(image);
 
+
       const textWithoutImage =
         String(content || "")
-          .replace(imageMarkdown[0], "")
+          .replace(
+            imageMarkdown[0],
+            ""
+          )
           .trim();
+
 
       if (textWithoutImage) {
 
         const caption =
           document.createElement("div");
 
+
         caption.className =
           "image-caption";
 
+
         caption.textContent =
           textWithoutImage;
+
 
         wrapper.appendChild(caption);
       }
@@ -460,33 +625,260 @@ document.addEventListener("DOMContentLoaded", () => {
 
     messagesBox.appendChild(wrapper);
 
+
     messagesBox.scrollTop =
       messagesBox.scrollHeight;
+
 
     return wrapper;
   }
 
 
+  // =========================
+  // RENDER MESSAGES
+  // =========================
+
   function renderMessages() {
 
     messagesBox.innerHTML = "";
 
+
     if (!currentChat) {
       return;
     }
+
 
     currentChat.messages.forEach(
       message => {
 
         addMessageToScreen(
           message.role,
-          message.content
+          message.content,
+          message.imageData || null,
+          message.imageMime || "image/png"
         );
+
       }
     );
 
+
     messagesBox.scrollTop =
       messagesBox.scrollHeight;
+  }
+
+
+  // =========================
+  // DETECT IMAGE REQUEST
+  // =========================
+
+  function looksLikeImageRequest(text) {
+
+    const value =
+      String(text || "")
+        .trim()
+        .toLowerCase();
+
+
+    const patterns = [
+
+      "ارسم لي",
+
+      "ارسملي",
+
+      "ارسم لى",
+
+      "ارسملي صورة",
+
+      "ارسم لي صورة",
+
+      "اعمل صورة",
+
+      "اعمل صوره",
+
+      "اعمل لي صورة",
+
+      "اعمللي صورة",
+
+      "أنشئ صورة",
+
+      "انشئ صورة",
+
+      "أنشئ لي صورة",
+
+      "انشئ لي صورة",
+
+      "اصنع صورة",
+
+      "اصنع لي صورة",
+
+      "اصنعلي صورة",
+
+      "صمم صورة",
+
+      "صمم لي صورة",
+
+      "صمملي صورة",
+
+      "اعمل تصميم",
+
+      "اعمل لي تصميم",
+
+      "صمم لي",
+
+      "صمملي",
+
+      "حولها لصورة",
+
+      "حول الكلام لصورة",
+
+      "generate an image",
+
+      "generate image",
+
+      "create an image",
+
+      "create image",
+
+      "make an image",
+
+      "make image",
+
+      "draw an image",
+
+      "draw me",
+
+      "draw a",
+
+      "create a picture",
+
+      "generate a picture"
+
+    ];
+
+
+    return patterns.some(
+      pattern =>
+        value.includes(pattern)
+    );
+  }
+
+
+  // =========================
+  // GENERATE IMAGE
+  // =========================
+
+  async function generateImage(prompt) {
+
+    if (imageGenerating) {
+      return;
+    }
+
+
+    if (!currentChat) {
+      return;
+    }
+
+
+    imageGenerating = true;
+
+
+    const loading =
+      addMessageToScreen(
+        "assistant",
+        "جارٍ إنشاء الصورة..."
+      );
+
+
+    loading.classList.add(
+      "loading"
+    );
+
+
+    try {
+
+      const response =
+        await fetch(
+          "/api/image",
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body: JSON.stringify({
+              prompt:
+                String(prompt).trim()
+            })
+          }
+        );
+
+
+      let data = {};
+
+
+      try {
+
+        data =
+          await response.json();
+
+      } catch {
+
+        throw new Error(
+          "الخادم أرسل ردًا غير صالح."
+        );
+      }
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.error ||
+          "فشل إنشاء الصورة."
+        );
+      }
+
+
+      if (!data.image) {
+
+        throw new Error(
+          "لم يتم استلام الصورة من Gemini."
+        );
+      }
+
+
+      loading.remove();
+
+
+      // عرض الصورة
+      addMessageToScreen(
+        "assistant",
+        "",
+        data.image,
+        data.mimeType ||
+          "image/png"
+      );
+
+
+    } catch (error) {
+
+      loading.remove();
+
+
+      addMessageToScreen(
+        "assistant",
+        "تعذر إنشاء الصورة:\n" +
+        (
+          error?.message ||
+          "حدث خطأ غير معروف."
+        )
+      );
+
+    } finally {
+
+      imageGenerating = false;
+    }
   }
 
 
@@ -499,18 +891,84 @@ document.addEventListener("DOMContentLoaded", () => {
     const text =
       textInput.value.trim();
 
+
     if (!text || !currentChat) {
       return;
     }
 
+
+    // =========================
+    // AUTOMATIC IMAGE REQUEST
+    // =========================
+
+    if (looksLikeImageRequest(text)) {
+
+      textInput.value = "";
+
+      attachOptions.classList.add(
+        "hide"
+      );
+
+
+      currentChat.messages.push({
+
+        role: "user",
+
+        content: text
+      });
+
+
+      if (
+        currentChat.title ===
+        "محادثة جديدة"
+      ) {
+
+        currentChat.title =
+          text.slice(0, 30);
+
+
+        if (text.length > 30) {
+
+          currentChat.title += "...";
+        }
+      }
+
+
+      addMessageToScreen(
+        "user",
+        text
+      );
+
+
+      saveChats();
+
+      renderChatList();
+
+
+      await generateImage(text);
+
+      return;
+    }
+
+
+    // =========================
+    // NORMAL TEXT CHAT
+    // =========================
+
     textInput.value = "";
 
-    attachOptions.classList.add("hide");
+    attachOptions.classList.add(
+      "hide"
+    );
+
 
     currentChat.messages.push({
+
       role: "user",
+
       content: text
     });
+
 
     if (
       currentChat.title ===
@@ -520,18 +978,24 @@ document.addEventListener("DOMContentLoaded", () => {
       currentChat.title =
         text.slice(0, 30);
 
+
       if (text.length > 30) {
+
         currentChat.title += "...";
       }
     }
+
 
     addMessageToScreen(
       "user",
       text
     );
 
+
     saveChats();
+
     renderChatList();
+
 
     const loading =
       addMessageToScreen(
@@ -539,32 +1003,44 @@ document.addEventListener("DOMContentLoaded", () => {
         "جارٍ التفكير..."
       );
 
-    loading.classList.add("loading");
+
+    loading.classList.add(
+      "loading"
+    );
+
 
     try {
 
       const response =
-        await fetch("/api/chat", {
+        await fetch(
+          "/api/chat",
+          {
 
-          method: "POST",
+            method: "POST",
 
-          headers: {
-            "Content-Type":
-              "application/json"
-          },
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
 
-          body: JSON.stringify({
-            messages:
-              currentChat.messages
-          })
-        });
+            body: JSON.stringify({
+              messages:
+                currentChat.messages
+            })
+          }
+        );
 
 
       let data = {};
 
+
       try {
-        data = await response.json();
+
+        data =
+          await response.json();
+
       } catch {
+
         throw new Error(
           "الخادم أرسل ردًا غير صالح."
         );
@@ -590,25 +1066,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
       currentChat.messages.push({
+
         role: "assistant",
+
         content: reply
       });
+
 
       addMessageToScreen(
         "assistant",
         reply
       );
 
+
       saveChats();
+
 
     } catch (error) {
 
       loading.remove();
 
+
       addMessageToScreen(
         "assistant",
         "تعذر الاتصال بـ NOVA AI:\n" +
-        error.message
+        (
+          error?.message ||
+          "حدث خطأ غير معروف."
+        )
       );
     }
   }
@@ -645,6 +1130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       event.preventDefault();
 
+
       if (attachedImage) {
 
         addMessageToScreen(
@@ -652,14 +1138,18 @@ document.addEventListener("DOMContentLoaded", () => {
           "🖼️ تم إرفاق صورة."
         );
 
+
         attachedImage = null;
+
 
         previewBox.classList.add(
           "hide"
         );
 
+
         imageInput.value = "";
       }
+
 
       await sendTextMessage();
     }
@@ -675,6 +1165,7 @@ document.addEventListener("DOMContentLoaded", () => {
     event => {
 
       event.stopPropagation();
+
 
       attachOptions.classList.toggle(
         "hide"
@@ -713,6 +1204,7 @@ document.addEventListener("DOMContentLoaded", () => {
         "hide"
       );
 
+
       imageInput.click();
     }
   );
@@ -725,40 +1217,56 @@ document.addEventListener("DOMContentLoaded", () => {
       const file =
         imageInput.files?.[0];
 
+
       if (!file) {
         return;
       }
 
-      if (!file.type.startsWith("image/")) {
+
+      if (
+        !file.type.startsWith(
+          "image/"
+        )
+      ) {
 
         alert(
           "من فضلك اختر ملف صورة."
         );
+
 
         imageInput.value = "";
 
         return;
       }
 
+
       attachedImage = file;
+
 
       const reader =
         new FileReader();
+
 
       reader.onload = () => {
 
         previewImage.src =
           reader.result;
 
+
         previewBox.classList.remove(
           "hide"
         );
       };
 
+
       reader.readAsDataURL(file);
     }
   );
 
+
+  // =========================
+  // REMOVE ATTACHED IMAGE
+  // =========================
 
   removeImageButton.addEventListener(
     "click",
@@ -766,9 +1274,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
       attachedImage = null;
 
+
       imageInput.value = "";
 
       previewImage.src = "";
+
 
       previewBox.classList.add(
         "hide"
@@ -778,7 +1288,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   // =========================
-  // REAL IMAGE GENERATION
+  // CREATE IMAGE BUTTON
   // =========================
 
   createImageButton.addEventListener(
@@ -786,21 +1296,27 @@ document.addEventListener("DOMContentLoaded", () => {
     async event => {
 
       event.preventDefault();
+
       event.stopPropagation();
+
 
       attachOptions.classList.add(
         "hide"
       );
 
+
       const prompt =
         textInput.value.trim();
+
 
       if (!prompt) {
 
         textInput.focus();
 
+
         textInput.placeholder =
           "اكتب وصف الصورة أولًا...";
+
 
         return;
       }
@@ -808,86 +1324,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       textInput.value = "";
 
-      const loading =
-        addMessageToScreen(
-          "assistant",
-          "جارٍ إنشاء الصورة..."
-        );
 
-      loading.classList.add(
-        "loading"
-      );
-
-
-      try {
-
-        const response =
-          await fetch("/api/image", {
-
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-              prompt
-            })
-          });
-
-
-        let data = {};
-
-        try {
-          data = await response.json();
-        } catch {
-          throw new Error(
-            "الخادم أرسل ردًا غير صالح."
-          );
-        }
-
-
-        if (!response.ok) {
-
-          throw new Error(
-            data.error ||
-            "فشل إنشاء الصورة."
-          );
-        }
-
-
-        if (!data.image) {
-
-          throw new Error(
-            "لم يتم استلام الصورة من Gemini."
-          );
-        }
-
-
-        loading.remove();
-
-
-        // عرض الصورة الحقيقية
-        addMessageToScreen(
-          "assistant",
-          "",
-          data.image,
-          data.mimeType ||
-            "image/png"
-        );
-
-
-      } catch (error) {
-
-        loading.remove();
-
-        addMessageToScreen(
-          "assistant",
-          "تعذر إنشاء الصورة:\n" +
-          error.message
-        );
-      }
+      // إرسال طلب الصورة
+      await generateImage(prompt);
     }
   );
 
@@ -914,8 +1353,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "light"
       );
 
+
       localStorage.setItem(
         "nova_theme",
+
         document.body.classList.contains(
           "light"
         )
@@ -940,11 +1381,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       chats = [];
 
-      app.classList.add("hide");
 
-      auth.classList.remove("hide");
+      app.classList.add(
+        "hide"
+      );
+
+
+      auth.classList.remove(
+        "hide"
+      );
+
 
       authForm.reset();
+
 
       showLogin();
     }
@@ -964,6 +1413,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ) || "null"
       );
 
+
     if (
       saved &&
       saved.email
@@ -975,6 +1425,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       showLogin();
     }
+
 
   } catch {
 
