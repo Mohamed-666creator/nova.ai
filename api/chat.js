@@ -1,4 +1,3 @@
-    const apiKey = process.env.GEMINI_API_KEY;
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
@@ -15,17 +14,13 @@ export default async function handler(req, res) {
       });
     }
 
+    const apiKey = process.env.GEMINI_API_KEY;
 
     if (!apiKey) {
       return res.status(500).json({
         error: "GEMINI_API_KEY غير موجود في Vercel"
       });
     }
-
-    /*
-      تحويل رسائل NOVA إلى صيغة يفهمها
-      Gemini Interactions API
-    */
 
     const input = messages.map((message) => ({
       type:
@@ -98,34 +93,23 @@ export default async function handler(req, res) {
       });
     }
 
-    /*
-      استخراج آخر رد نصي من Gemini
-    */
-
     let reply = "";
 
     if (Array.isArray(data.steps)) {
-
       for (let i = data.steps.length - 1; i >= 0; i--) {
-
         const step = data.steps[i];
 
         if (
           step.type === "model_output" &&
           Array.isArray(step.content)
         ) {
-
           for (const content of step.content) {
-
             if (
               content.type === "text" &&
               content.text
             ) {
-
               reply += content.text;
-
             }
-
           }
 
           if (reply.trim()) {
@@ -148,7 +132,6 @@ export default async function handler(req, res) {
     });
 
   } catch (error) {
-
     console.error(error);
 
     return res.status(500).json({
@@ -156,6 +139,5 @@ export default async function handler(req, res) {
         error.message ||
         "Server error"
     });
-
   }
 }
