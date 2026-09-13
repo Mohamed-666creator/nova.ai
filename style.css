@@ -2,11 +2,25 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
 body {
   margin: 0;
-  font-family: Arial, "Segoe UI", sans-serif;
+
+  font-family:
+    Arial,
+    "Segoe UI",
+    sans-serif;
+
   background: #0b0b10;
+
   color: #f5f5f7;
+
+  overflow: hidden;
 }
 
 .hide {
@@ -20,7 +34,9 @@ textarea {
 }
 
 
-/* ================= AUTH ================= */
+/* =====================================================
+   AUTH
+===================================================== */
 
 .auth {
   min-height: 100vh;
@@ -37,6 +53,8 @@ textarea {
       #28144d,
       #0b0b10 60%
     );
+
+  overflow-y: auto;
 }
 
 
@@ -98,7 +116,9 @@ aside span {
 }
 
 
-/* ================= TABS ================= */
+/* =====================================================
+   AUTH TABS
+===================================================== */
 
 .tabs {
   display: flex;
@@ -123,6 +143,15 @@ aside span {
   border-radius: 10px;
 
   cursor: pointer;
+
+  transition:
+    background .2s,
+    transform .15s;
+}
+
+
+.tabs button:hover {
+  transform: translateY(-1px);
 }
 
 
@@ -135,7 +164,9 @@ aside span {
 }
 
 
-/* ================= INPUTS ================= */
+/* =====================================================
+   AUTH INPUTS
+===================================================== */
 
 .card input:not([type="checkbox"]) {
   width: 100%;
@@ -193,11 +224,20 @@ aside span {
   border-radius: 11px;
 
   cursor: pointer;
+
+  transition:
+    background .2s,
+    transform .15s;
 }
 
 
 .primary:hover {
   background: #9b68ff;
+}
+
+
+.primary:active {
+  transform: scale(.98);
 }
 
 
@@ -210,17 +250,35 @@ aside span {
 }
 
 
-/* ================= APP ================= */
+/* =====================================================
+   APP
+===================================================== */
 
 .app {
-  height: 100vh;
+  position: relative;
+
+  width: 100%;
+
+  height: 100dvh;
 
   display: flex;
+
+  overflow: hidden;
+
+  background: #0b0b10;
 }
 
 
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
 .app aside {
   width: 270px;
+
+  min-width: 270px;
+
+  height: 100%;
 
   background: #101017;
 
@@ -231,10 +289,20 @@ aside span {
   display: flex;
 
   flex-direction: column;
+
+  position: relative;
+
+  z-index: 100;
+
+  transition:
+    transform .25s ease,
+    width .25s ease;
 }
 
 
-/* ================= BRAND ================= */
+/* =====================================================
+   BRAND
+===================================================== */
 
 .brand {
   display: flex;
@@ -280,7 +348,9 @@ aside span {
 }
 
 
-/* ================= NEW CHAT ================= */
+/* =====================================================
+   NEW CHAT
+===================================================== */
 
 .app aside > button {
   margin: 20px 0 10px;
@@ -296,22 +366,73 @@ aside span {
   border-radius: 11px;
 
   cursor: pointer;
+
+  transition:
+    background .2s,
+    transform .15s;
 }
 
 
-/* ================= CHAT LIST ================= */
+.app aside > button:hover {
+  background: #9963ff;
+
+  transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   CHAT LIST
+===================================================== */
 
 #list {
   overflow-y: auto;
+
+  flex: 1;
+
+  min-height: 0;
+
+  padding-right: 2px;
 }
 
 
-.chat {
-  padding: 11px;
+.chat-row {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 4px;
+
+  margin-bottom: 4px;
 
   border-radius: 10px;
 
+  transition:
+    background .15s;
+}
+
+
+.chat-row:hover,
+.chat-row.active {
+  background: #20202a;
+}
+
+
+.chat-row .chat {
+  flex: 1;
+
+  min-width: 0;
+
+  padding: 11px;
+
+  border: 0;
+
+  background: transparent;
+
   color: #ccc;
+
+  text-align: right;
 
   white-space: nowrap;
 
@@ -321,17 +442,70 @@ aside span {
 
   cursor: pointer;
 
-  margin-bottom: 3px;
+  border-radius: 10px;
 }
 
 
-.chat.active,
-.chat:hover {
-  background: #20202a;
+.chat-row.active .chat {
+  color: #fff;
 }
 
 
-/* ================= BOTTOM ================= */
+.chat-delete {
+  flex-shrink: 0;
+
+  width: 36px;
+
+  height: 36px;
+
+  margin-left: 3px;
+
+  border: 0;
+
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #888;
+
+  cursor: pointer;
+
+  opacity: 0;
+
+  transition:
+    opacity .15s,
+    background .15s,
+    color .15s;
+}
+
+
+.chat-row:hover .chat-delete,
+.chat-row.active .chat-delete {
+  opacity: 1;
+}
+
+
+.chat-delete:hover {
+  background: #3a2025;
+
+  color: #ff7777;
+}
+
+
+.chat-empty {
+  padding: 20px 10px;
+
+  text-align: center;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+
+/* =====================================================
+   SIDEBAR BOTTOM
+===================================================== */
 
 .bottom {
   margin-top: auto;
@@ -356,26 +530,46 @@ aside span {
   border-radius: 10px;
 
   cursor: pointer;
+
+  transition:
+    background .2s;
 }
 
 
-/* ================= MAIN ================= */
+.bottom button:hover {
+  background: #2a2a35;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
 
 .app main {
   flex: 1;
+
+  min-width: 0;
+
+  height: 100%;
 
   display: flex;
 
   flex-direction: column;
 
-  min-width: 0;
+  position: relative;
+
+  background: #0b0b10;
 }
 
 
-/* ================= HEADER ================= */
+/* =====================================================
+   HEADER
+===================================================== */
 
 .app header {
   height: 68px;
+
+  min-height: 68px;
 
   padding: 0 22px;
 
@@ -385,7 +579,52 @@ aside span {
 
   align-items: center;
 
+  gap: 12px;
+
   justify-content: space-between;
+
+  background: rgba(11, 11, 16, .92);
+
+  position: relative;
+
+  z-index: 20;
+}
+
+
+.sidebar-toggle {
+  display: none;
+
+  flex-shrink: 0;
+
+  width: 42px;
+
+  height: 42px;
+
+  border: 1px solid #333;
+
+  border-radius: 11px;
+
+  background: #20202a;
+
+  color: #fff;
+
+  cursor: pointer;
+
+  font-size: 21px;
+
+  transition:
+    background .2s,
+    transform .15s;
+}
+
+
+.sidebar-toggle:hover {
+  background: #2c2c38;
+}
+
+
+.sidebar-toggle:active {
+  transform: scale(.93);
 }
 
 
@@ -395,6 +634,10 @@ aside span {
   align-items: center;
 
   gap: 10px;
+
+  min-width: 0;
+
+  margin-right: auto;
 }
 
 
@@ -402,6 +645,8 @@ aside span {
   width: 43px;
 
   height: 43px;
+
+  flex-shrink: 0;
 
   border-radius: 50%;
 
@@ -431,12 +676,46 @@ aside span {
 }
 
 
-/* ================= MESSAGES ================= */
+/* =====================================================
+   SIDEBAR OVERLAY
+===================================================== */
+
+.sidebar-overlay {
+  display: none;
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0, 0, 0, .58);
+
+  z-index: 90;
+
+  opacity: 0;
+
+  transition:
+    opacity .25s ease;
+}
+
+
+.sidebar-overlay.show {
+  opacity: 1;
+}
+
+
+/* =====================================================
+   MESSAGES
+===================================================== */
 
 #msgs {
   flex: 1;
 
-  overflow: auto;
+  min-height: 0;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
 
   padding:
     28px
@@ -447,6 +726,8 @@ aside span {
   flex-direction: column;
 
   gap: 15px;
+
+  scroll-behavior: smooth;
 }
 
 
@@ -462,6 +743,9 @@ aside span {
   white-space: pre-wrap;
 
   word-break: break-word;
+
+  animation:
+    novaMessageIn .22s ease-out;
 }
 
 
@@ -469,6 +753,10 @@ aside span {
   align-self: flex-start;
 
   background: #7540d7;
+
+  color: #fff;
+
+  border-bottom-right-radius: 5px;
 }
 
 
@@ -482,6 +770,8 @@ aside span {
   position: relative;
 
   margin-right: 52px;
+
+  border-bottom-left-radius: 5px;
 }
 
 
@@ -534,11 +824,92 @@ aside span {
   100% {
     opacity: .4;
   }
-
 }
 
 
-/* ================= INPUT ================= */
+@keyframes novaMessageIn {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(8px)
+      scale(.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* =====================================================
+   WELCOME
+===================================================== */
+
+.welcome {
+  width: min(600px, 100%);
+
+  margin: auto;
+
+  text-align: center;
+
+  padding: 30px 20px;
+
+  color: #ddd;
+}
+
+
+.welcome-logo {
+  width: 76px;
+
+  height: 76px;
+
+  margin: 0 auto 18px;
+
+  border-radius: 50%;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 0 30px
+    rgba(138, 77, 255, .35);
+}
+
+
+.welcome-logo img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+}
+
+
+.welcome h2 {
+  margin:
+    0 0 8px;
+
+  font-size: 25px;
+}
+
+
+.welcome p {
+  margin: 0;
+
+  color: #888;
+
+  font-size: 15px;
+}
+
+
+/* =====================================================
+   INPUT AREA
+===================================================== */
 
 .app form {
   width:
@@ -560,6 +931,53 @@ aside span {
   border: 1px solid #333;
 
   border-radius: 17px;
+
+  box-shadow:
+    0 8px 30px
+    rgba(0, 0, 0, .16);
+}
+
+
+.app textarea {
+  flex: 1;
+
+  min-width: 0;
+
+  resize: none;
+
+  max-height: 140px;
+
+  min-height: 42px;
+
+  background: transparent;
+
+  color: #fff;
+
+  border: 0;
+
+  outline: 0;
+
+  padding: 10px;
+
+  line-height: 1.5;
+
+  overflow-y: auto;
+}
+
+
+.app textarea::placeholder {
+  color: #777;
+}
+
+
+/* =====================================================
+   ATTACH + SEND
+===================================================== */
+
+.attach-menu {
+  position: relative;
+
+  flex-shrink: 0;
 }
 
 
@@ -580,7 +998,30 @@ aside span {
 
 
 .attach {
+  border: 0;
+
   background: #252530;
+
+  color: #fff;
+
+  font-size: 22px;
+
+  transition:
+    background .2s,
+    transform .15s,
+    box-shadow .15s;
+}
+
+
+.attach:hover {
+  background: #343441;
+
+  transform: translateY(-2px);
+}
+
+
+.attach:active {
+  transform: scale(.92);
 }
 
 
@@ -590,247 +1031,35 @@ aside span {
   background: #8a4dff;
 
   color: #fff;
-}
 
-
-.app textarea {
-  flex: 1;
-
-  resize: none;
-
-  max-height: 140px;
-
-  background: transparent;
-
-  color: #fff;
-
-  border: 0;
-
-  outline: 0;
-
-  padding: 10px;
-}
-
-
-/* ================= IMAGE PREVIEW ================= */
-
-.app #prev {
-  width:
-    min(850px, calc(100% - 28px));
-
-  margin: 0 auto 7px;
-
-  position: relative;
-}
-
-
-.app #prev img {
-  max-width: 220px;
-
-  max-height: 120px;
-
-  border-radius: 10px;
-}
-
-
-.app #prev button {
-  position: absolute;
-
-  left: 0;
-
-  top: 0;
-
-  border: 0;
-
-  border-radius: 50%;
-
-  background: #000;
-
-  color: #fff;
-
-  width: 26px;
-
-  height: 26px;
-
-  cursor: pointer;
-}
-
-
-/* ================= FOOTER ================= */
-
-.app footer {
-  text-align: center;
-
-  font-size: 11px;
-
-  color: #999;
-
-  padding:
-    0 10px 12px;
-}
-
-
-/* ================= LIGHT MODE ================= */
-
-.light {
-  background: #f4f4f6;
-
-  color: #111;
-}
-
-
-.light .app aside {
-  background: #fff;
-
-  border-color: #ddd;
-}
-
-
-.light .app main {
-  background: #f4f4f6;
-}
-
-
-.light .app header {
-  border-color: #ddd;
-}
-
-
-.light .msg.ai {
-  background: #fff;
-
-  border-color: #ddd;
-
-  color: #111;
-}
-
-
-.light .app form,
-.light .bottom button {
-  background: #fff;
-
-  color: #222;
-
-  border-color: #ddd;
-}
-
-
-.light .app textarea {
-  color: #111;
-}
-
-
-/* ================= MOBILE ================= */
-
-@media (max-width: 700px) {
-
-  .app aside {
-    width: 220px;
-  }
-
-
-  .msg {
-    max-width: 86%;
-  }
-
-
-  .msg.ai {
-    margin-right: 45px;
-  }
-
-
-  .msg.ai::before {
-    right: -45px;
-
-    width: 34px;
-
-    height: 34px;
-  }
-
-
-  .chat-logo {
-    width: 38px;
-
-    height: 38px;
-  }
-
-
-  .nova-logo {
-    width: 42px;
-
-    height: 42px;
-  }
-
-}
-
-
-@media (max-width: 520px) {
-
-  .app aside {
-    width: 190px;
-
-    padding: 12px;
-  }
-
-
-  .brand small {
-    display: none;
-  }
-
-
-  .brand b {
-    font-size: 17px;
-  }
-
-
-  .auth-logo {
-    width: 48px;
-
-    height: 48px;
-  }
-
-
-  .auth-title {
-    font-size: 25px;
-  }
-
-}
-/* ================= ATTACH MENU ================= */
-
-.attach-menu {
-  position: relative;
-  flex-shrink: 0;
-}
-
-
-.attach {
-  width: 42px;
-  height: 42px;
-
-  display: grid;
-  place-items: center;
-
-  border: 0;
-
-  background: #252530;
-  color: #fff;
-
-  border-radius: 11px;
-
-  cursor: pointer;
-
-  font-size: 22px;
+  font-size: 18px;
 
   transition:
-    background .2s,
-    transform .2s;
+    transform .15s ease,
+    box-shadow .15s ease,
+    background .15s ease;
 }
 
 
-.attach:hover {
-  background: #343441;
+.send:hover {
+  background: #9963ff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 22px
+    rgba(138, 77, 255, .38);
 }
 
+
+.send:active {
+  transform: scale(.92);
+}
+
+
+/* =====================================================
+   ATTACH MENU
+===================================================== */
 
 .attach-options {
   position: absolute;
@@ -851,11 +1080,12 @@ aside span {
 
   box-shadow:
     0 15px 40px
-    rgba(0,0,0,.45);
+    rgba(0, 0, 0, .45);
 
   z-index: 50;
 
-  animation: menuIn .15s ease;
+  animation:
+    menuIn .15s ease;
 }
 
 
@@ -889,18 +1119,217 @@ aside span {
 
   from {
     opacity: 0;
-    transform: translateY(6px);
+
+    transform:
+      translateY(6px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0);
-  }
 
+    transform:
+      translateY(0);
+  }
 }
 
 
-/* LIGHT MODE */
+/* =====================================================
+   IMAGE PREVIEW
+   مرفقات فقط - لا يوجد توليد صور
+===================================================== */
+
+.app #prev {
+  width:
+    min(850px, calc(100% - 28px));
+
+  margin:
+    0 auto 7px;
+
+  position: relative;
+}
+
+
+.app #prev img {
+  max-width: 220px;
+
+  max-height: 120px;
+
+  border-radius: 10px;
+
+  object-fit: cover;
+
+  border: 1px solid #333;
+}
+
+
+.app #prev button {
+  position: absolute;
+
+  right: auto;
+
+  left: 0;
+
+  top: 0;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: #000;
+
+  color: #fff;
+
+  width: 26px;
+
+  height: 26px;
+
+  cursor: pointer;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.app footer {
+  text-align: center;
+
+  font-size: 11px;
+
+  color: #777;
+
+  padding:
+    0 10px 12px;
+
+  flex-shrink: 0;
+}
+
+
+/* =====================================================
+   LIGHT MODE
+===================================================== */
+
+.light {
+  background: #f4f4f6;
+
+  color: #111;
+}
+
+
+.light .app {
+  background: #f4f4f6;
+}
+
+
+.light .app aside {
+  background: #fff;
+
+  border-color: #ddd;
+}
+
+
+.light .app main {
+  background: #f4f4f6;
+}
+
+
+.light .app header {
+  background: rgba(244, 244, 246, .92);
+
+  border-color: #ddd;
+}
+
+
+.light .sidebar-toggle {
+  background: #fff;
+
+  color: #222;
+
+  border-color: #ddd;
+}
+
+
+.light .sidebar-toggle:hover {
+  background: #f0f0f4;
+}
+
+
+.light .chat-row:hover,
+.light .chat-row.active {
+  background: #f0f0f4;
+}
+
+
+.light .chat-row .chat {
+  color: #444;
+}
+
+
+.light .chat-row.active .chat {
+  color: #111;
+}
+
+
+.light .chat-delete:hover {
+  background: #ffe8eb;
+
+  color: #d33;
+}
+
+
+.light .msg.ai {
+  background: #fff;
+
+  border-color: #ddd;
+
+  color: #111;
+}
+
+
+.light .app form {
+  background: #fff;
+
+  color: #222;
+
+  border-color: #ddd;
+}
+
+
+.light .app textarea {
+  color: #111;
+}
+
+
+.light .app textarea::placeholder {
+  color: #999;
+}
+
+
+.light .attach {
+  background: #f0f0f4;
+
+  color: #222;
+}
+
+
+.light .attach:hover {
+  background: #e5e5eb;
+}
+
+
+.light .bottom button {
+  background: #fff;
+
+  color: #222;
+
+  border-color: #ddd;
+}
+
+
+.light .bottom button:hover {
+  background: #f0f0f4;
+}
+
 
 .light .attach-options {
   background: #fff;
@@ -909,7 +1338,7 @@ aside span {
 
   box-shadow:
     0 15px 40px
-    rgba(0,0,0,.15);
+    rgba(0, 0, 0, .15);
 }
 
 
@@ -921,245 +1350,437 @@ aside span {
 .light .attach-options button:hover {
   background: #f0f0f4;
 }
-/* ================= AI IMAGE ================= */
 
-.image-message {
-  padding: 8px !important;
-  max-width: min(520px, 78%);
+
+.light .welcome {
+  color: #222;
 }
 
 
-.image-message img {
-  display: block;
-
-  width: 100%;
-
-  max-width: 500px;
-
-  height: auto;
-
-  border-radius: 12px;
-
-  box-shadow:
-    0 8px 30px
-    rgba(0, 0, 0, .35);
-}/* ================= NOVA EFFECTS ================= */
-
-.msg {
-  animation: novaMessageIn .22s ease-out;
+.light .welcome p {
+  color: #777;
 }
 
-@keyframes novaMessageIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px) scale(.98);
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+  .app aside {
+    width: 240px;
+
+    min-width: 240px;
   }
 
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  #msgs {
+    padding:
+      22px
+      max(14px, calc((100% - 750px) / 2));
+  }
+
+
+  .msg {
+    max-width: 84%;
   }
 }
 
 
-/* ================= SEND BUTTON ================= */
+/* =====================================================
+   MOBILE
+===================================================== */
 
-.send {
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease,
-    background .15s ease;
-}
+@media (max-width: 700px) {
 
-.send:hover {
-  background: #9963ff;
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 6px 22px
-    rgba(138, 77, 255, .38);
-}
-
-.send:active {
-  transform: scale(.92);
-}
+  body {
+    overflow: hidden;
+  }
 
 
-/* ================= ATTACH BUTTON ================= */
-
-.attach {
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease;
-}
-
-.attach:hover {
-  transform: translateY(-2px);
-}
-
-.attach:active {
-  transform: scale(.92);
-}
+  .app {
+    position: relative;
+  }
 
 
-/* ================= GENERATED IMAGE ================= */
+  /* Sidebar يتحول لقائمة منزلقة */
 
-.image-message {
-  padding: 8px !important;
-  max-width: min(520px, 78%);
-}
+  .app aside {
+    position: fixed;
 
-.image-message .bubble {
-  padding: 0;
-  overflow: hidden;
-}
+    top: 0;
 
-.image-message img {
-  display: block;
-  width: 100%;
-  max-width: 500px;
-  height: auto;
+    right: 0;
 
-  border-radius: 14px;
+    bottom: 0;
 
-  box-shadow:
-    0 10px 35px
-    rgba(0, 0, 0, .35);
+    width: min(310px, 86vw);
 
-  animation:
-    novaImageIn .35s ease-out;
-}
+    min-width: 0;
 
-@keyframes novaImageIn {
-  from {
-    opacity: 0;
+    padding: 14px;
+
     transform:
-      scale(.94)
-      translateY(8px);
+      translateX(105%);
+
+    box-shadow:
+      -15px 0 45px
+      rgba(0, 0, 0, .35);
+
+    z-index: 100;
   }
 
-  to {
-    opacity: 1;
+
+  .app.sidebar-open aside {
     transform:
-      scale(1)
-      translateY(0);
-  }
-}
-
-
-/* ================= IMAGE LOADING ================= */
-
-.image-loading {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.image-loading strong {
-  display: block;
-}
-
-.image-loading small {
-  display: block;
-  margin-top: 3px;
-  opacity: .65;
-}
-
-.image-spinner {
-  width: 24px;
-  height: 24px;
-
-  border-radius: 50%;
-
-  border: 3px solid rgba(255,255,255,.15);
-  border-top-color: currentColor;
-
-  animation:
-    novaSpin .8s linear infinite;
-}
-
-@keyframes novaSpin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-
-/* ================= TYPING ================= */
-
-.typing {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.typing span {
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: currentColor;
-
-  opacity: .4;
-
-  animation:
-    novaTyping 1s infinite;
-}
-
-.typing span:nth-child(2) {
-  animation-delay: .15s;
-}
-
-.typing span:nth-child(3) {
-  animation-delay: .3s;
-}
-
-@keyframes novaTyping {
-  0%,
-  100% {
-    opacity: .25;
-    transform: translateY(0);
+      translateX(0);
   }
 
-  50% {
+
+  .sidebar-overlay {
+    display: block;
+
+    pointer-events: none;
+  }
+
+
+  .sidebar-overlay.show {
+    pointer-events: auto;
+  }
+
+
+  .sidebar-toggle {
+    display: grid;
+
+    place-items: center;
+  }
+
+
+  .app header {
+    height: 62px;
+
+    min-height: 62px;
+
+    padding:
+      0 12px;
+  }
+
+
+  .chat-logo {
+    width: 38px;
+
+    height: 38px;
+  }
+
+
+  .chat-brand strong {
+    font-size: 15px;
+  }
+
+
+  .chat-brand small {
+    font-size: 10px;
+  }
+
+
+  #msgs {
+    padding:
+      18px 12px;
+
+    gap: 12px;
+  }
+
+
+  .msg {
+    max-width: 88%;
+
+    padding:
+      11px 13px;
+
+    font-size: 15px;
+
+    line-height: 1.65;
+  }
+
+
+  .msg.ai {
+    margin-right: 42px;
+  }
+
+
+  .msg.ai::before {
+    right: -42px;
+
+    width: 34px;
+
+    height: 34px;
+  }
+
+
+  .welcome {
+    padding:
+      20px 10px;
+  }
+
+
+  .welcome-logo {
+    width: 65px;
+
+    height: 65px;
+  }
+
+
+  .welcome h2 {
+    font-size: 21px;
+  }
+
+
+  .welcome p {
+    font-size: 14px;
+  }
+
+
+  .app form {
+    width:
+      calc(100% - 12px);
+
+    margin:
+      0 auto 5px;
+
+    padding: 6px;
+
+    gap: 5px;
+
+    border-radius: 15px;
+  }
+
+
+  .app textarea {
+    padding:
+      9px 7px;
+
+    font-size: 15px;
+
+    min-height: 42px;
+  }
+
+
+  .attach,
+  .send {
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 10px;
+  }
+
+
+  .app footer {
+    padding-bottom: 8px;
+
+    font-size: 10px;
+  }
+
+
+  .chat-delete {
     opacity: 1;
-    transform: translateY(-3px);
   }
 }
 
 
-/* ================= IMAGE CAPTION ================= */
-
-.image-caption {
-  padding: 10px 4px 3px;
-  font-size: 13px;
-  opacity: .75;
-}
-
-
-/* ================= TEXTAREA EFFECT ================= */
-
-#text {
-  transition:
-    box-shadow .2s ease;
-}
-
-#text:focus {
-  outline: none;
-
-  box-shadow:
-    0 0 0 3px
-    rgba(138, 77, 255, .12);
-}
-
-
-/* ================= MOBILE IMAGE ================= */
+/* =====================================================
+   SMALL PHONES
+===================================================== */
 
 @media (max-width: 520px) {
 
-  .image-message {
-    max-width: 86%;
+  .auth {
+    padding: 12px;
   }
 
+
+  .card {
+    padding: 22px;
+
+    border-radius: 20px;
+  }
+
+
+  .auth-logo {
+    width: 48px;
+
+    height: 48px;
+  }
+
+
+  .auth-title {
+    font-size: 25px;
+  }
+
+
+  .brand {
+    margin-bottom: 12px;
+  }
+
+
+  .nova-logo {
+    width: 42px;
+
+    height: 42px;
+  }
+
+
+  .brand b {
+    font-size: 17px;
+  }
+
+
+  .brand small {
+    display: none;
+  }
+
+
+  .app header {
+    padding:
+      0 9px;
+
+    gap: 7px;
+  }
+
+
+  .sidebar-toggle {
+    width: 39px;
+
+    height: 39px;
+
+    font-size: 19px;
+  }
+
+
+  .chat-logo {
+    width: 35px;
+
+    height: 35px;
+  }
+
+
+  .chat-brand {
+    gap: 7px;
+  }
+
+
+  .chat-brand strong {
+    font-size: 14px;
+  }
+
+
+  .chat-brand small {
+    font-size: 9px;
+  }
+
+
+  #msgs {
+    padding:
+      14px 9px;
+  }
+
+
+  .msg {
+    max-width: 91%;
+
+    font-size: 14px;
+  }
+
+
+  .msg.ai {
+    margin-right: 38px;
+  }
+
+
+  .msg.ai::before {
+    right: -38px;
+
+    width: 31px;
+
+    height: 31px;
+  }
+
+
+  .app form {
+    width:
+      calc(100% - 8px);
+
+    margin-bottom: 4px;
+  }
+
+
+  .attach,
+  .send {
+    width: 38px;
+
+    height: 38px;
+  }
+
+
+  .attach-options {
+    width: 175px;
+  }
+
+
+  .app #prev {
+    width:
+      calc(100% - 10px);
+  }
+
+
+  .app footer {
+    display: none;
+  }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+===================================================== */
+
+@media (max-width: 360px) {
+
+  .chat-brand small {
+    display: none;
+  }
+
+
+  .msg {
+    max-width: 93%;
+
+    font-size: 13px;
+  }
+
+
+  .msg.ai {
+    margin-right: 35px;
+  }
+
+
+  .msg.ai::before {
+    right: -35px;
+
+    width: 29px;
+
+    height: 29px;
+  }
+
+
+  .app textarea {
+    font-size: 14px;
+  }
+
+
+  .attach,
+  .send {
+    width: 36px;
+
+    height: 36px;
+  }
 }
